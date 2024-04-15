@@ -354,7 +354,7 @@ local function DoFastUpdate()
     local testNrd = GetOption("RayTracing", "EnableNRD")
 
     if testRain ~= var.settings.rain or testIndoors ~= var.settings.indoors then
-        DoRainFix()
+        -- DoRainFix()
         var.settings.rain = testRain
         var.settings.indoors = testIndoors
     end
