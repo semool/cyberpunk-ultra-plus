@@ -445,8 +445,8 @@ registerForEvent('onUpdate', function(delta)
 end)
 
 registerForEvent("onTweak", function()
-     LoadIni("myownsettings.ini")
      LoadIni("config_common.ini") -- load as early as possible to prevent crashes
+     LoadIni("myownsettings.ini")
 end)
 
 registerForEvent("onInit", function()
