@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.0-beta10',
+    __VERSION     = '4.0-rc1',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -297,8 +297,9 @@ function ResetEngine()
 end
 
 local function EnableRegir(state)
-    -- if enabling reGIR, wait 1 second first (don't wait to disable things)
-    local seconds = state == true and 1.0 or 0.0
+    -- wait 1.5 second to re-enable reGIR (but don't wait to disable)
+    logger.info("PTNext detected.", state and "Enabling" or "Disabling", "separate denoiser")
+    local seconds = state == true and 1.5 or 0.0
 
     Wait(seconds, function()
         SetOption("Editor/ReGIR", "UseForDI", state)
@@ -346,7 +347,7 @@ local function DoNrdFix(enabled)
 end
 
 local function DoGameSessionStart()
-    -- stuff to do once game session starts
+    -- do at game launch or start of loading a savegame
     if not config.gameLoaded then
         logger.info('Game session started')
         config.gameLoaded = true
@@ -354,15 +355,13 @@ local function DoGameSessionStart()
 end
 
 local function DoGameSessionEnd()
-    -- stuff to do once game session ends
-    -- if not Game.GetPlayer() then                -- WAS if == nil .. but what happens if this is not false/nil? this won't run again, so we will miss the end of game session?
+    -- do at game session end or exiting to main menu
     logger.info('Game session ended')
     config.gameLoaded = false
 
     if var.settings.mode == var.mode.PTNEXT then
         EnableRegir(false)
     end
-    -- end
 end
 
 local function DoFastUpdate()
@@ -384,7 +383,7 @@ local function DoFastUpdate()
         var.settings.nrdEnabled = testNrd
     end
 
-    if config.gameLoaded and GetOption("Editor/ReGIR", "Enable") and Game.GetPlayer() and not config.regirActive then
+    if not config.regirActive and config.gameLoaded and GetOption("Editor/ReGIR", "Enable") and Detector.isGameActive then
         EnableRegir(true)
     end
 end
@@ -445,8 +444,9 @@ registerForEvent('onUpdate', function(delta)
 end)
 
 registerForEvent("onTweak", function()
-     LoadIni("config_common.ini") -- load as early as possible to prevent crashes
-     LoadIni("myownsettings.ini")
+    -- load as early as possible to prevent crashes
+    LoadIni("config_common.ini")
+    LoadIni("myownsettings.ini")
 end)
 
 registerForEvent("onInit", function()
