@@ -393,7 +393,7 @@ end
 ui.renderControlPanel = function()
     -- SET DEFAULTS
     ImGui.SetNextWindowPos(50, 300, ImGuiCond.FirstUseEver)
-    ImGui.SetNextWindowSize(440, 500, ImGuiCond.Appearing)
+    ImGui.SetNextWindowSize(460, 500, ImGuiCond.Appearing)
 
     -- BEGIN ACTUAL RENDER
     if ImGui.Begin("Ultra+ v" .. UltraPlus.__VERSION, true) then
