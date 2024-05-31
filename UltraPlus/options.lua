@@ -40,6 +40,12 @@ local options = {
     },
     Features = {
         {
+            item = "Tonemapping",
+            name = "Enable Tonemapping",
+            category = "Developer/FeatureToggles",
+            tooltip = "Enable or disable the CP tonemapper. Especially useful if you use RenoDX or Reshade (CP Default: On)",
+        },
+        {
             item = "Bloom",
             name = "Enable Bloom",
             category = "Developer/FeatureToggles",
@@ -110,6 +116,12 @@ local options = {
             name = "Force INI Mip Bias",
             category = "Editor/MipBias",
             tooltip = "Caution: Not recommended for 12GB VRAM or less (CP Default: Off)",
+        },
+        {
+            item = "UseScreenSpaceData",
+            name = "Enable Blended Screen Space Reflections",
+            category = "Editor/PathTracing",
+            tooltip = "Blends screenspace reflections with RT or PT reflections (less physically-based)\nbut fixes some missing reflections.",
         },
     },
     RTXDI = {
@@ -440,13 +452,6 @@ local options = {
             name = "Use SSR Fallback",
             category = "Editor/PathTracing",
             tooltip = "Uses screenspace for rough reflections in PT, as a performance optimisation",
-        },
-        {
-            item = "UseScreenSpaceData",
-            name = "Enable Blended Screen Space Reflections",
-            category = "Editor/PathTracing",
-            tooltip = "Blends screenspace reflections with RT or PT reflections (less physically-based)\nbut fixes some missing reflections.",
-            defaultValue = true,
         },
         {
             item = "EnableProbabilisticSampling",
