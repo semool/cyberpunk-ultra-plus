@@ -71,6 +71,7 @@ local function renderTabEngineDrawer()
             config.SetMode(var.settings.mode)
             LoadIni("config_rt.ini")
             config.SetQuality(var.settings.quality)
+            LoadIni("myownsettings.ini")
             SaveSettings()
         end
         ui.tooltip("Regular ray tracing, with optimisations and fixes.")
@@ -81,6 +82,7 @@ local function renderTabEngineDrawer()
             config.SetMode(var.settings.mode)
             LoadIni("config_rtpt.ini")
             config.SetQuality(var.settings.quality)
+            LoadIni("myownsettings.ini")
             SaveSettings()
         end
         ui.tooltip("Normal raytracing plus path traced bounce lighting. Leave Path Tracing\ndisabled in graphics options for this to work correctly.")
@@ -91,6 +93,7 @@ local function renderTabEngineDrawer()
             config.SetMode(var.settings.mode)
             LoadIni("config_pt.ini")
             config.SetQuality(var.settings.quality)
+            LoadIni("myownsettings.ini")
             SaveSettings()
         end
         ui.tooltip("Path tracing from Cyberpunk 2.0.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.")
@@ -101,6 +104,7 @@ local function renderTabEngineDrawer()
             config.SetMode(var.settings.mode)
             LoadIni("config_pt.ini")
             config.SetQuality(var.settings.quality)
+            LoadIni("myownsettings.ini")
             SaveSettings()
         end
         ui.tooltip("Path tracing from Cyberpunk 2.10+.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.")
@@ -111,6 +115,7 @@ local function renderTabEngineDrawer()
             config.SetMode(var.settings.mode)
             LoadIni("config_pt.ini")
             config.SetQuality(var.settings.quality)
+            LoadIni("myownsettings.ini")
             SaveSettings()
         end
         ui.tooltip("For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics?DLSS will also require a reload.\n\nNOTE: For other PT modes we recommend increasing DLSS/FSR3 and lowering PT\nquality for the best visuals. However for PTNext we recommend the opposite:\nRun PTNext as high as you can and turn upscaling down a step.")
@@ -120,7 +125,9 @@ local function renderTabEngineDrawer()
     if ImGui.CollapsingHeader("Quality Level", ImGuiTreeNodeFlags.DefaultOpen) then
         if ImGui.RadioButton("Vanilla##QualityVanilla", var.settings.quality == var.quality.VANILLA) then
             var.settings.quality = var.quality.VANILLA
+            LoadIni("config_vanilla.ini")
             config.SetQuality(var.settings.quality)
+            LoadIni("myownsettings.ini")
             SaveSettings()
         end
 
@@ -129,6 +136,7 @@ local function renderTabEngineDrawer()
             var.settings.quality = var.quality.LOW
             LoadIni("config_low.ini")
             config.SetQuality(var.settings.quality)
+            LoadIni("myownsettings.ini")
             SaveSettings()
         end
 
@@ -137,6 +145,7 @@ local function renderTabEngineDrawer()
             var.settings.quality = var.quality.MEDIUM
             LoadIni("config_medium.ini")
             config.SetQuality(var.settings.quality)
+            LoadIni("myownsettings.ini")
             SaveSettings()
         end
 
@@ -145,6 +154,7 @@ local function renderTabEngineDrawer()
             var.settings.quality = var.quality.HIGH
             LoadIni("config_high.ini")
             config.SetQuality(var.settings.quality)
+            LoadIni("myownsettings.ini")
             SaveSettings()
         end
 
@@ -153,6 +163,7 @@ local function renderTabEngineDrawer()
             var.settings.quality = var.quality.INSANE
             LoadIni("config_insane.ini")
             config.SetQuality(var.settings.quality)
+            LoadIni("myownsettings.ini")
             SaveSettings()
         end
     end
