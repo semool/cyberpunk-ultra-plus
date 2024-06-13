@@ -118,13 +118,42 @@ local function renderTabEngineDrawer()
 
     ui.space()
     if ImGui.CollapsingHeader("Quality Level", ImGuiTreeNodeFlags.DefaultOpen) then
-        for _, v in pairs(var.quality) do
-            if ImGui.RadioButton(tostring(v), var.settings.quality == v) then
-                var.settings.quality = v
-                config.SetQuality(var.settings.quality)
-                SaveSettings()
-            end
-            ui.align()
+        if ImGui.RadioButton("Vanilla##QualityVanilla", var.settings.quality == var.quality.VANILLA) then
+            var.settings.quality = var.quality.VANILLA
+            config.SetQuality(var.settings.quality)
+            SaveSettings()
+        end
+
+        ui.align()
+        if ImGui.RadioButton("Low", var.settings.quality == var.quality.LOW) then
+            var.settings.quality = var.quality.LOW
+            LoadIni("config_low.ini")
+            config.SetQuality(var.settings.quality)
+            SaveSettings()
+        end
+
+        ui.align()
+        if ImGui.RadioButton("Medium", var.settings.quality == var.quality.MEDIUM) then
+            var.settings.quality = var.quality.MEDIUM
+            LoadIni("config_medium.ini")
+            config.SetQuality(var.settings.quality)
+            SaveSettings()
+        end
+
+        ui.align()
+        if ImGui.RadioButton("High", var.settings.quality == var.quality.HIGH) then
+            var.settings.quality = var.quality.HIGH
+            LoadIni("config_high.ini")
+            config.SetQuality(var.settings.quality)
+            SaveSettings()
+        end
+
+        ui.align()
+        if ImGui.RadioButton("Insane", var.settings.quality == var.quality.INSANE) then
+            var.settings.quality = var.quality.INSANE
+            LoadIni("config_insane.ini")
+            config.SetQuality(var.settings.quality)
+            SaveSettings()
         end
     end
 
