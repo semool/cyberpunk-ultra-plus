@@ -7,6 +7,14 @@ local config = {
     SetQuality = require("setquality").SetQuality,
     SetVram = require("setvram").SetVram,
     DEBUG = true,
+    isDebugTabActive = false,
+    windowWidth = 485,
+    windowHeight = 454,
+    windowHeightDebug = 910,
+    fpsWidth = 60,
+}
+local stats = {
+    fps = 0,
 }
 local toggled
 local ui = {
@@ -55,7 +63,7 @@ local ui = {
     end,
 }
 
-local function renderTabEngineDrawer()
+function renderTabEngineDrawer()
 
     ui.text("NOTE: Once happy, reload a save to fully activate the mode")
 
@@ -69,7 +77,6 @@ local function renderTabEngineDrawer()
         if ImGui.RadioButton("RT Only", var.settings.mode == var.mode.RT_ONLY) then
             var.settings.mode = var.mode.RT_ONLY
             config.SetMode(var.settings.mode)
-            LoadIni("config_rt.ini")
             config.SetQuality(var.settings.quality)
             LoadIni("myownsettings.ini")
             SaveSettings()
@@ -80,7 +87,6 @@ local function renderTabEngineDrawer()
         if ImGui.RadioButton("RT+PT", var.settings.mode == var.mode.RT_PT) then
             var.settings.mode = var.mode.RT_PT
             config.SetMode(var.settings.mode)
-            LoadIni("config_rtpt.ini")
             config.SetQuality(var.settings.quality)
             LoadIni("myownsettings.ini")
             SaveSettings()
@@ -91,7 +97,6 @@ local function renderTabEngineDrawer()
         if ImGui.RadioButton("PT20", var.settings.mode == var.mode.PT20) then
             var.settings.mode = var.mode.PT20
             config.SetMode(var.settings.mode)
-            LoadIni("config_pt.ini")
             config.SetQuality(var.settings.quality)
             LoadIni("myownsettings.ini")
             SaveSettings()
@@ -102,7 +107,6 @@ local function renderTabEngineDrawer()
         if ImGui.RadioButton("PT21", var.settings.mode == var.mode.PT21) then
             var.settings.mode = var.mode.PT21
             config.SetMode(var.settings.mode)
-            LoadIni("config_pt.ini")
             config.SetQuality(var.settings.quality)
             LoadIni("myownsettings.ini")
             SaveSettings()
@@ -113,7 +117,6 @@ local function renderTabEngineDrawer()
         if ImGui.RadioButton("PTNext", var.settings.mode == var.mode.PTNEXT) then
             var.settings.mode = var.mode.PTNEXT
             config.SetMode(var.settings.mode)
-            LoadIni("config_pt.ini")
             config.SetQuality(var.settings.quality)
             LoadIni("myownsettings.ini")
             SaveSettings()
@@ -125,7 +128,6 @@ local function renderTabEngineDrawer()
     if ImGui.CollapsingHeader("Quality Level", ImGuiTreeNodeFlags.DefaultOpen) then
         if ImGui.RadioButton("Vanilla##QualityVanilla", var.settings.quality == var.quality.VANILLA) then
             var.settings.quality = var.quality.VANILLA
-            LoadIni("config_vanilla.ini")
             config.SetQuality(var.settings.quality)
             LoadIni("myownsettings.ini")
             SaveSettings()
@@ -207,7 +209,7 @@ local function renderTabEngineDrawer()
     end
 end
 
-local function renderRenderingFeaturesDrawer()
+function renderRenderingFeaturesDrawer()
     ui.space()
     for _, setting in pairs(options.Features) do
         setting.value = GetOption(setting.category, setting.item)
@@ -221,7 +223,7 @@ local function renderRenderingFeaturesDrawer()
     end
 end
 
-local function renderDebugDrawer()
+function renderDebugDrawer()
     ui.line()
     for _, setting in pairs(options.RTXDI) do
         setting.value = GetOption(setting.category, setting.item)
@@ -333,7 +335,7 @@ local function renderDebugDrawer()
     end
 end
 
-local function renderTabs()
+function renderTabs()
     if ImGui.BeginTabBar("Tabs") then
         if ImGui.BeginTabItem("Ultra+ Config") then
             renderTabEngineDrawer()
@@ -346,21 +348,42 @@ local function renderTabs()
         end
 
         if ImGui.BeginTabItem("Debug") and config.DEBUG then
-            renderDebugDrawer()
-            ImGui.EndTabItem()
-        end
+			config.isDebugTabActive = true
+			renderDebugDrawer()
+			ImGui.EndTabItem()
+		else
+			config.isDebugTabActive = false
+		end
 
         ImGui.EndTabBar()
+
+		if stats.fps == 0 then
+			return
+		end
+
+		local padding = config.windowWidth - config.fpsWidth
+		config.fpsWidth = ImGui.CalcTextSize("0000000000000")
+        ImGui.SameLine(padding)
+        ImGui.Text("Real FPS: "..tostring(stats.fps))
     end
 end
 
-ui.renderUI = function()
-    -- set defaults
-    ImGui.SetNextWindowPos(50, 300, ImGuiCond.FirstUseEver)
-    ImGui.SetNextWindowSize(530, 515, ImGuiCond.Appearing)
+ui.renderUI = function(fps)
+	stats.fps = fps
+
+    ImGui.SetNextWindowPos(10, 300, ImGuiCond.FirstUseEver)
+
+    config.windowWidth = ImGui.CalcTextSize("000000000000000000000000000000000000000000000000")
+	config.windowHeight = config.windowWidth * 0.95
+
+    if config.isDebugTabActive then
+    	ImGui.SetNextWindowSize(config.windowWidth, config.windowHeightDebug)
+    else
+       	ImGui.SetNextWindowSize(config.windowWidth, config.windowHeight)
+	end
 
     -- begin actual render
-    if ImGui.Begin("Ultra+ v" .. UltraPlus.__VERSION, true) then
+    if ImGui.Begin("Ultra+ v"..UltraPlus.__VERSION, true) then
         ImGui.SetWindowFontScale(var.settings.uiScale)
         renderTabs()
         ImGui.End()

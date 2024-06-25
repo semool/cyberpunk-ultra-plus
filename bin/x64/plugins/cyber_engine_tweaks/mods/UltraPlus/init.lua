@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.3.1',
+    __VERSION     = '4.4.0',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -31,8 +31,10 @@ local config = {
     SetVram = require("setvram").SetVram,
     DEBUG = false,
     regirActive = false,
-    gameLoaded = false,
     nsgddActive = false,
+}
+local stats = {
+    fps = 0,
 }
 local timer = {
     lazy = 0,
@@ -104,8 +106,8 @@ function GetOption(category, item)
 
     if string.match(value, "^%-?%d+$") then
         return tonumber(value)
-    end	
-	
+    end
+
 	return value
 end
 
@@ -159,7 +161,7 @@ function LoadIni(path)
         return
     end
 
-    logger.info("Loading", path)
+    logger.info("    (Loading", path..")")
     for line in file:lines() do
         line = line:match("^%s*(.-)%s*$") -- trim whitespace
 
@@ -220,19 +222,19 @@ function LoadSettings()
         return
     end
 
+    logger.info("Loading user settings...")
     for item, value in pairs(result.UltraPlus) do
         if settingsTable[item] and not string.match(item, "^internal") then
             settingsTable[item].value = value
         elseif string.match(item, "^internal") then
             local key = string.match(item, "^internal%.(%w+)$")
             if key then
-                logger.info("Assigning internal setting:", key, "=", value)
+                logger.info("    Found user config", key..":", value)
                 var.settings[key] = value
             end
         end
     end
 
-    logger.info("Loading user settings...")
     for item, setting in pairs(settingsTable) do
         SetOption(setting.category, item, setting.value)
     end
@@ -275,7 +277,7 @@ function SaveSettings()
     file:close()
 end
 
-local function ForceDlssd()
+function ForceDlssd()
     local testDlssd = GetOption('/graphics/presets', 'DLSS_D')
 
     while testDlssd == false do
@@ -299,32 +301,35 @@ function ResetEngine()
     GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():RequestSaveUserSettings()
 end
 
-local function EnableRegir(state)
+function EnableRegir(state)
     -- wait 1.5 second to re-enable reGIR (but don't wait to disable)
-    logger.info("PTNext detected.", state and "Enabling" or "Disabling", "separate denoiser")
+    logger.info("    (PTNext:", state and "Re-enabling" or "Disabling", "separate denoiser)")
     local seconds = state == true and 1.5 or 0.0
 
     Wait(seconds, function()
         SetOption("Editor/ReGIR", "UseForDI", state)
-        SetOption("Editor/RTXDI", "EnableSeparateDenoising", state)
+
+        if not GetOption("RayTracing", "EnableNRD") then
+        	SetOption("Editor/RTXDI", "EnableSeparateDenoising", state)
+		end
     end)
-    -- DoRefreshEngine()
+
     config.regirActive = state
 end
 
-local function DoRainFix()
+function DoRainFix()
     -- enable particle PT integration unless player is outdoors AND it's raining
     if var.settings.indoors or not var.settings.rain then
-        logger.info("It's not raining... Enabling separate particle colour")
+        logger.info("    (It's not raining: Enabling separate particle colour)")
         SetOption("Rendering", "DLSSDSeparateParticleColor", true)
         return
     end
 
-    logger.info("It's raining... Disabling separate particle colour")
+    logger.info("    (It's raining: Disabling separate particle colour)")
     SetOption("Rendering", "DLSSDSeparateParticleColor", false)
 end
 
-local function DoRRFix()
+function DoRRFix()
     -- while RR is enabled, continually disable NRD to work around CP FPS slowdown bug entering vehicles or cutscenes
     timer.paused = true
     if not GetOption("/graphics/presets", "DLSS_D") then
@@ -346,25 +351,34 @@ function DoRefreshEngine()
     end)
 end
 
-local function DoGameSessionStart()
+function DoGameStarting()
     -- do at game launch or start of loading a savegame
-    if not config.gameLoaded then
-        logger.info('Game session started')
-        config.gameLoaded = true
+    logger.info("[Game session starting]")
+    if timer.paused then
+        logger.info("    (Unpausing background functions)")
+        timer.paused = false
     end
 end
 
-local function DoGameSessionEnd()
+function DoGameExiting()
     -- do at game session end or exiting to main menu
-    logger.info('Game session ended')
-    config.gameLoaded = false
+    logger.info("...")
+    logger.info("[Game session ending]")
+    logger.info("    (Pausing background functions)")
+    timer.paused = true
+    config.regirActive = false
+    stats.fps = 0
 
-    if var.settings.mode == var.mode.PTNEXT then
-        EnableRegir(false)
+    initUltraPlus()
+end
+
+function DoGameStarted()
+    if var.settings.mode == var.mode.PTNEXT and not config.regirActive then
+        EnableRegir(true)
     end
 end
 
-local function DoFastUpdate()
+function DoFastUpdate()
     -- runs every timer.FAST seconds
     DoRRFix()
 
@@ -378,20 +392,19 @@ local function DoFastUpdate()
         DoRainFix()
     end
 
-    if not config.regirActive and config.gameLoaded and GetOption("Editor/ReGIR", "Enable") and Detector.isGameActive then
-        EnableRegir(true)
-    end
+    DoGameStarted()
 end
 
-local function DoLazyUpdate()
+function DoLazyUpdate()
     -- runs every timer.LAZY seconds
 end
 
-local function DoWeatherUpdate()
+function DoWeatherUpdate()
     -- runs every timer.WEATHER seconds
 end
 
-local function forcePTDenoiser()
+--[[ this method crashes CP
+function forcePTDenoiser()
     if GetOption("Developer/FeatureToggles", "DLSSD") then
         logger.info("Enabling RR, disabling NRD")
         SetOption("Developer/FeatureToggles", "DLSSD", true)
@@ -406,35 +419,38 @@ local function forcePTDenoiser()
         --PushChanges()
     end
 end
+]]
 
 registerForEvent('onUpdate', function(delta)
     -- handle non-blocking background tasks
     Detector.UpdateGameStatus()
 
-    if not timer.paused then
-        timer.fast = timer.fast + delta
-        timer.lazy = timer.lazy + delta
-        timer.weather = timer.weather + delta
-
-        -- prevent engine from skipping temporal updates when mouse/controller isn't moving
-        -- Game.GetPlayer():GetFPPCameraComponent():SceneDisableBlendingToStaticPosition()
+    if timer.paused or not Detector.isGameActive then
+        return
     end
 
-    if Detector.isGameActive and config.gameLoaded then
-        if timer.fast > timer.FAST then
-            DoFastUpdate()
-            timer.fast = 0
-        end
+    timer.fast = timer.fast + delta
+    timer.lazy = timer.lazy + delta
+    timer.weather = timer.weather + delta
 
-        if timer.lazy > timer.LAZY then
-            DoLazyUpdate()
-            timer.lazy = 0
-        end
+    stats.fps = math.floor(1 / delta)
+--[[
+    prevent engine from skipping temporal updates when mouse/controller isn't moving
+    Game.GetPlayer():GetFPPCameraComponent():SceneDisableBlendingToStaticPosition()
+]]
+    if timer.fast > timer.FAST then
+        DoFastUpdate()
+        timer.fast = 0
+    end
 
-        if timer.weather > timer.WEATHER then
-            DoWeatherUpdate()
-            timer.weather = 0
-        end
+    if timer.lazy > timer.LAZY then
+        DoLazyUpdate()
+        timer.lazy = 0
+    end
+
+    if timer.weather > timer.WEATHER then
+        DoWeatherUpdate()
+        timer.weather = 0
     end
 
     for i = #activeTimers, 1, -1 do
@@ -448,6 +464,18 @@ registerForEvent('onUpdate', function(delta)
     end
 end)
 
+function initUltraPlus()
+    logger.info("Initializing...")
+    LoadIni("config_common.ini")
+    LoadSettings()
+
+    config.SetMode(var.settings.mode)
+    config.SetQuality(var.settings.quality)
+    config.SetVram(var.settings.vram)
+
+    LoadIni("myownsettings.ini")
+end
+
 registerForEvent("onTweak", function()
     -- load as early as possible to prevent crashes
     LoadIni("config_common.ini")
@@ -455,32 +483,6 @@ registerForEvent("onTweak", function()
 end)
 
 registerForEvent("onInit", function()
-    Observe('QuestTrackerGameController', 'OnInitialize', function(this)
-        logger.info("Entered game Observe", this)
-        DoGameSessionStart()
-    end)
-
-    ObserveAfter('QuestTrackerGameController', 'OnInitialize', function(this)
-        logger.info("Entered game ObserveAfter", this)
-        DoGameSessionStart()
-    end)
-
-    Observe('QuestTrackerGameController', 'OnUninitialize', function(this)
-        logger.info("Exited game Observe", this)
-        DoGameSessionEnd()
-    end)
-
-    ObserveAfter("QuestTrackerGameController", "OnUninitialize", function(this)
-        logger.info("Exited game ObserveAfter", this)
-    end)
-
-    Observe("CCTVCamera", "TakeControl", function(this, val)
-        logger.info("Camera control:", this, val)
-    end)
-
-    ObserveAfter("CCTVCamera", "TakeControl", function(this, val)
-        logger.info("Camera control end:", this, val)
-    end)
 
     local file = io.open("debug", "r")
     if file then
@@ -488,16 +490,23 @@ registerForEvent("onInit", function()
         Debug("Enabling debug output")
     end
 
-    LoadIni("config_common.ini")
-    LoadSettings()
-    config.SetMode(var.settings.mode)
-    config.SetQuality(var.settings.quality)
-    config.SetVram(var.settings.vram)
-    LoadIni("myownsettings.ini")
+    ObserveAfter('QuestTrackerGameController', 'OnInitialize', function(this)
+        DoGameStarting()
+    end)
 
-    if var.settings.mode == var.mode.PTNEXT then
-        EnableRegir(false)
-    end
+    Observe('QuestTrackerGameController', 'OnUninitialize', function(this)
+        DoGameExiting()
+    end)
+
+    Observe("CCTVCamera", "TakeControl", function(this, val)
+        logger.info("    (Camera control:", this, val..")")
+    end)
+
+    ObserveAfter("CCTVCamera", "TakeControl", function(this, val)
+        logger.info("    (Camera control end:", this, val..")")
+    end)
+
+    initUltraPlus()
 end)
 
 registerForEvent("onOverlayOpen", function()
@@ -513,5 +522,5 @@ registerForEvent("onDraw", function()
         return
     end
 
-    ui.renderUI()
+    ui.renderUI(stats.fps)
 end)

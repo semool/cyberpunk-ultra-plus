@@ -2,7 +2,7 @@
 
 local __log = function(level)
     return function(...)
-        print(string.rep("-", 10), "Ultra+:", ...)
+        print("          Ultra+:", ...)
     end
 end
 

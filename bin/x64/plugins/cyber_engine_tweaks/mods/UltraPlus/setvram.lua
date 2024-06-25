@@ -5,7 +5,7 @@ local var = require("variables")
 local config = {}
 
 function config.SetVram(vram)
-    logger.info("Setting vram to", vram, "GB")
+    logger.info("Configuring vram for", vram, "GB")
 
     if vram == var.vram.OFF then
         SetOption("Rendering", "FakeOverrideGPUVRAM", false)

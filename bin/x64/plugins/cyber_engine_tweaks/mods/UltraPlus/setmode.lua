@@ -5,7 +5,7 @@ local var = require("variables")
 local config = {}
 
 function config.SetMode(mode)
-    logger.info("Setting mode to", mode)
+    logger.info("Configuring mode for", mode)
 
     if mode == var.mode.RASTER then
         SetOption("/graphics/raytracing", "RayTracing", false)
@@ -19,6 +19,8 @@ function config.SetMode(mode)
     end
 
     if mode == var.mode.RT_ONLY then
+        LoadIni("config_rt.ini")
+
         SetOption("/graphics/raytracing", "RayTracedPathTracing", false)
         SetOption("/graphics/raytracing", "RayTracing", true)
         SetOption("Editor/ReGIR", "Enable", false)
@@ -41,7 +43,7 @@ function config.SetMode(mode)
         -- SetOption("RayTracing", "EnableGlobalIllumination", false)
         SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
-        SetOption("RayTracing/Debug", "EnableVisibilityCheck", true)                -- TEST
+        SetOption("RayTracing/Debug", "EnableVisibilityCheck", false)                -- TEST
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "200.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "100.0")
         SetOption("RayTracing/Reflection", "EnableHalfResolutionTracing", "1")
@@ -58,6 +60,8 @@ function config.SetMode(mode)
     end
 
     if mode == var.mode.RT_PT then
+        LoadIni("config_rtpt.ini")
+
         SetOption("/graphics/raytracing", "RayTracing", true)
         SetOption("/graphics/raytracing", "RayTracedPathTracing", false)
         SetOption("Editor/ReGIR", "Enable", false)
@@ -67,6 +71,7 @@ function config.SetMode(mode)
         SetOption("Developer/FeatureToggles", "RTXDI", true)
         SetOption("Developer/FeatureToggles", "ScreenSpaceReflection", false)
         SetOption("Developer/FeatureToggles", "ScreenSpacePlanarReflection", false)
+        SetOption("Developer/FeatureToggles", "PathTracingForPhotoMode", false)
         SetOption("Rendering", "AllowRTXDIRejitter", true) 
         SetOption("RayTracing", "EnableNRD", true)
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "1")
@@ -83,7 +88,7 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableGlobalIllumination", false)
         SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
-        SetOption("RayTracing/Debug", "EnableVisibilityCheck", true)                -- TEST
+        SetOption("RayTracing/Debug", "EnableVisibilityCheck", false)                -- TEST
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "70.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "70.0")
         SetOption("RayTracing/Reflection", "EnableHalfResolutionTracing", "1")
@@ -95,17 +100,17 @@ function config.SetMode(mode)
         SetOption("Rendering/VariableRateShading", "ScreenEdgeFactor", "2.0")
         SetOption("Editor/ReSTIRGI", "Enable", false)
         SetOption("Editor/ReSTIRGI", "EnableFused", false)
-        SetOption("Editor/ReSTIRGI", "EnableFallbackSampling", false)
+        SetOption("Editor/ReSTIRGI", "EnableFallbackSampling", true)
         SetOption("Editor/ReSTIRGI", "EnableBoilingFilter", false)
         SetOption("Editor/ReSTIRGI", "UseSpatialRGS", false)
         SetOption("Editor/ReSTIRGI", "UseTemporalRGS", false)
         SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "0")
         SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "0")
-        SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "3")
-        SetOption("Editor/ReSTIRGI", "SpatialSamplingRadius", "64.0")
-        SetOption("Editor/RTXDI", "SpatialSamplingRadius", "64.0")
+        SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "1")
+        SetOption("Editor/ReSTIRGI", "SpatialSamplingRadius", "48.0")				-- WAS 64.0
+        SetOption("Editor/RTXDI", "SpatialSamplingRadius", "20.0")					-- WAS 64.0
         SetOption("Editor/RTXDI", "EnableGradients", true)
-        SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", true)
+        SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", false)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)		-- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.45")					-- WAS 0.45
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "1")
@@ -124,6 +129,8 @@ function config.SetMode(mode)
     end
 
     if mode == var.mode.VANILLA then
+        LoadIni("config_vanilla_mode.ini")
+
         SetOption("/graphics/raytracing", "RayTracing", true)
         SetOption("/graphics/raytracing", "RayTracedPathTracing", true)
         SetOption("Editor/ReGIR", "Enable", false)
@@ -188,6 +195,8 @@ function config.SetMode(mode)
     end
 
     if mode == var.mode.PT21 then
+        LoadIni("config_pt.ini")
+        
         SetOption("/graphics/raytracing", "RayTracing", true)
         SetOption("/graphics/raytracing", "RayTracedPathTracing", true)
         SetOption("Editor/ReGIR", "Enable", false)
@@ -197,22 +206,23 @@ function config.SetMode(mode)
         SetOption("Developer/FeatureToggles", "RTXDI", true)
         SetOption("Developer/FeatureToggles", "ScreenSpaceReflection", false)
         SetOption("Developer/FeatureToggles", "ScreenSpacePlanarReflection", false)
+        SetOption("Developer/FeatureToggles", "PathTracingForPhotoMode", true)
         SetOption("Rendering", "AllowRTXDIRejitter", true) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
         SetOption("RayTracing", "SunAngularSize", "0.20")
         SetOption("RayTracing", "SkyRadianceScale", "0.7")                          -- fake PT sunlight on buildings
-        SetOption("RayTracing", "EnableShadowCascades", false)						-- TEST
+        SetOption("RayTracing", "EnableShadowCascades", true)						-- TEST
         SetOption("RayTracing", "EnableGlobalShadow", true)
-        SetOption("RayTracing", "EnableLocalShadow", false)							-- TEST
-        SetOption("RayTracing", "EnableTransparentReflection", false)				-- TEST
-        SetOption("RayTracing", "EnableDiffuseIllumination", false)					-- TEST
-        SetOption("RayTracing", "EnableAmbientOcclusion", false)					-- TEST
-        SetOption("RayTracing", "EnableReflection", false)							-- TEST
+        SetOption("RayTracing", "EnableLocalShadow", true)							-- TEST
+        SetOption("RayTracing", "EnableTransparentReflection", true)				-- TEST
+        SetOption("RayTracing", "EnableDiffuseIllumination", true)					-- TEST
+        SetOption("RayTracing", "EnableAmbientOcclusion", true)				    	-- TEST
+        SetOption("RayTracing", "EnableReflection", true)							-- TEST
         SetOption("RayTracing", "EnableShadowOptimizations", false)					-- TEST
         SetOption("RayTracing", "EnableGlobalIllumination", false)					-- TEST
         SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
-        SetOption("RayTracing/Debug", "EnableVisibilityCheck", true)                -- TEST 1fps faster
+        SetOption("RayTracing/Debug", "EnableVisibilityCheck", false)                -- TEST 1fps faster
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "70.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "70.0")
         SetOption("RayTracing/Reference", "EnableFixed", true)
@@ -232,11 +242,11 @@ function config.SetMode(mode)
         SetOption("Editor/ReSTIRGI", "UseTemporalRGS", true)
         SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "8")
         SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "6")
-        SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "3")
-        SetOption("Editor/ReSTIRGI", "SpatialSamplingRadius", "64.0")
-        SetOption("Editor/RTXDI", "SpatialSamplingRadius", "64.0")
+        SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "1")
+        SetOption("Editor/ReSTIRGI", "SpatialSamplingRadius", "48.0")				-- WAS 64.0
+        SetOption("Editor/RTXDI", "SpatialSamplingRadius", "20.0")					-- WAS 64.0
         SetOption("Editor/RTXDI", "EnableGradients", true)
-        SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", true)
+        SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", false)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)		-- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.45")					-- WAS 0.45
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "1")
@@ -255,6 +265,8 @@ function config.SetMode(mode)
     end
 
     if mode == var.mode.PT20 then
+        LoadIni("config_pt.ini")
+
         SetOption("/graphics/raytracing", "RayTracing", true)
         SetOption("/graphics/raytracing", "RayTracedPathTracing", true)
         SetOption("Editor/ReGIR", "Enable", false)
@@ -264,44 +276,45 @@ function config.SetMode(mode)
         SetOption("Developer/FeatureToggles", "RTXDI", true)
         SetOption("Developer/FeatureToggles", "ScreenSpaceReflection", false)
         SetOption("Developer/FeatureToggles", "ScreenSpacePlanarReflection", false)
+        SetOption("Developer/FeatureToggles", "PathTracingForPhotoMode", true)
         SetOption("Rendering", "AllowRTXDIRejitter", true) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
         SetOption("RayTracing", "SunAngularSize", "0.20")
         SetOption("RayTracing", "SkyRadianceScale", "0.7")                          -- fake PT sunlight on buildings
-        SetOption("RayTracing", "EnableShadowCascades", false)						-- TEST
+        SetOption("RayTracing", "EnableShadowCascades", true)						-- TEST
         SetOption("RayTracing", "EnableGlobalShadow", true)
-        SetOption("RayTracing", "EnableLocalShadow", false)							-- TEST
-        SetOption("RayTracing", "EnableTransparentReflection", false)				-- TEST
-        SetOption("RayTracing", "EnableDiffuseIllumination", false)					-- TEST
-        SetOption("RayTracing", "EnableAmbientOcclusion", false)					-- TEST
-        SetOption("RayTracing", "EnableReflection", false)							-- TEST
-        SetOption("RayTracing", "EnableShadowOptimizations", false)					-- TEST
+        SetOption("RayTracing", "EnableLocalShadow", true)							-- TEST
+        SetOption("RayTracing", "EnableTransparentReflection", true)				-- TEST
+        SetOption("RayTracing", "EnableDiffuseIllumination", true)					-- TEST
+        SetOption("RayTracing", "EnableAmbientOcclusion", true)				    	-- TEST
+        SetOption("RayTracing", "EnableReflection", true)							-- TEST
+        SetOption("RayTracing", "EnableShadowOptimizations", true)					-- TEST
         SetOption("RayTracing", "EnableGlobalIllumination", false)					-- TEST
         SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
-        SetOption("RayTracing/Debug", "EnableVisibilityCheck", true)                -- TEST 1fps faster
+        SetOption("RayTracing/Debug", "EnableVisibilityCheck", false)                -- TEST 1fps faster
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "70.0")		-- WAS 70.0 improves RTXDI light/shadow selection
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "70.0")		-- WAS 70.0
         SetOption("RayTracing/Reference", "EnableFixed", true)
         SetOption("RayTracing/Reflection", "EnableHalfResolutionTracing", "1")
-        SetOption("RayTracing/Reflection", "AdaptiveSampling", false)
+        SetOption("RayTracing/Reflection", "AdaptiveSampling", true)
         SetOption("RayTracing/Diffuse", "EnableHalfResolutionTracing", "0")
-        SetOption("RayTracing/Diffuse", "AdaptiveSampling", false)
+        SetOption("RayTracing/Diffuse", "AdaptiveSampling", true)
         SetOption("Rendering/VariableRateShading", "VarianceCutoff", "0.05")
         SetOption("Rendering/VariableRateShading", "MotionFactor", "0.7")
         SetOption("Rendering/VariableRateShading", "ScreenEdgeFactor", "2.0")
         SetOption("Editor/ReSTIRGI", "Enable", false)
         SetOption("Editor/ReSTIRGI", "EnableFused", false)
-        SetOption("Editor/ReSTIRGI", "EnableFallbackSampling", false)
+        SetOption("Editor/ReSTIRGI", "EnableFallbackSampling", true)
         SetOption("Editor/ReSTIRGI", "EnableBoilingFilter", false)
         SetOption("Editor/ReSTIRGI", "UseSpatialRGS", false)
         SetOption("Editor/ReSTIRGI", "UseTemporalRGS", false)
         SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "0")
         SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "0")
-        SetOption("Editor/ReSTIRGI", "SpatialSamplingRadius", "64.0")
-        SetOption("Editor/RTXDI", "SpatialSamplingRadius", "64.0")
+        SetOption("Editor/ReSTIRGI", "SpatialSamplingRadius", "48.0")				-- WAS 64.0
+        SetOption("Editor/RTXDI", "SpatialSamplingRadius", "20.0")					-- WAS 64.0
         SetOption("Editor/RTXDI", "EnableGradients", true)
-        SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", true)
+        SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", false)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)		-- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.45")					-- WAS 0.45
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "1")
@@ -319,6 +332,8 @@ function config.SetMode(mode)
     end
 
     if mode == var.mode.PTNEXT then
+        LoadIni("config_pt.ini")
+
         SetOption("/graphics/raytracing", "RayTracing", true)
         SetOption("/graphics/raytracing", "RayTracedPathTracing", true)
         SetOption("Editor/ReGIR", "Enable", true)
@@ -328,29 +343,30 @@ function config.SetMode(mode)
         SetOption("Developer/FeatureToggles", "RTXDI", true)
         SetOption("Developer/FeatureToggles", "ScreenSpaceReflection", false)
         SetOption("Developer/FeatureToggles", "ScreenSpacePlanarReflection", false)
+        SetOption("Developer/FeatureToggles", "PathTracingForPhotoMode", true)
         SetOption("Rendering", "AllowRTXDIRejitter", false) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
         SetOption("RayTracing", "SunAngularSize", "0.20")
         SetOption("RayTracing", "SkyRadianceScale", "0.7")                          -- fake PT sunlight on buildings
-        SetOption("RayTracing", "EnableShadowCascades", false)
+        SetOption("RayTracing", "EnableShadowCascades", true)
         SetOption("RayTracing", "EnableGlobalShadow", true)
-        SetOption("RayTracing", "EnableLocalShadow", true)
-        SetOption("RayTracing", "EnableTransparentReflection", false)
-        SetOption("RayTracing", "EnableDiffuseIllumination", false)
-        SetOption("RayTracing", "EnableAmbientOcclusion", false)
-        SetOption("RayTracing", "EnableReflection", false)
+        SetOption("RayTracing", "EnableLocalShadow", true)							-- TEST
+        SetOption("RayTracing", "EnableTransparentReflection", true)				-- TEST
+        SetOption("RayTracing", "EnableDiffuseIllumination", true)					-- TEST
+        SetOption("RayTracing", "EnableAmbientOcclusion", true)				    	-- TEST
+        SetOption("RayTracing", "EnableReflection", true)							-- TEST
         SetOption("RayTracing", "EnableShadowOptimizations", true)
         SetOption("RayTracing", "EnableGlobalIllumination", false)
         SetOption("RayTracing", "EnableImportanceSampling", false)					-- TEST
         SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
-        SetOption("RayTracing/Debug", "EnableVisibilityCheck", true)                -- TEST 1fps faster
+        SetOption("RayTracing/Debug", "EnableVisibilityCheck", false)                -- TEST 1fps faster
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "200.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "100.0")
         SetOption("RayTracing/Reference", "EnableFixed", false)
         SetOption("RayTracing/Reflection", "EnableHalfResolutionTracing", "1")
-        SetOption("RayTracing/Reflection", "AdaptiveSampling", false)
-        SetOption("RayTracing/Diffuse", "EnableHalfResolutionTracing", "1")
-        SetOption("RayTracing/Diffuse", "AdaptiveSampling", false)
+        SetOption("RayTracing/Reflection", "AdaptiveSampling", true)
+        SetOption("RayTracing/Diffuse", "EnableHalfResolutionTracing", "0")
+        SetOption("RayTracing/Diffuse", "AdaptiveSampling", true)
         SetOption("Rendering/VariableRateShading", "VarianceCutoff", "0.05")
         SetOption("Rendering/VariableRateShading", "MotionFactor", "0.7")
         SetOption("Rendering/VariableRateShading", "ScreenEdgeFactor", "2.0")
@@ -363,11 +379,11 @@ function config.SetMode(mode)
         SetOption("Editor/ReSTIRGI", "UseTemporalRGS", true)
         SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
         SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
-        SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "3")
-        SetOption("Editor/ReSTIRGI", "SpatialSamplingRadius", "20.0")
-        SetOption("Editor/RTXDI", "SpatialSamplingRadius", "20.0")
+        SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "1")
+        SetOption("Editor/ReSTIRGI", "SpatialSamplingRadius", "48.0")				-- WAS 64.0
+        SetOption("Editor/RTXDI", "SpatialSamplingRadius", "20.0")					-- WAS 64.0
         SetOption("Editor/RTXDI", "EnableGradients", true)
-        SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", true)
+        SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", false)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)		-- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.45")					-- WAS 0.35 TEST
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "1")
