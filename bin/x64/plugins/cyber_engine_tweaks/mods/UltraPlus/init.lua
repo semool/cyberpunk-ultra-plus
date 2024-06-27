@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.4.0',
+    __VERSION     = '4.5.0',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -30,8 +30,9 @@ local config = {
     SetQuality = require("setquality").SetQuality,
     SetVram = require("setvram").SetVram,
     DEBUG = false,
-    regirActive = false,
+    ptnextActivated = false,
     nsgddActive = false,
+    WindowOpen = false,
 }
 local stats = {
     fps = 0,
@@ -48,12 +49,11 @@ local timer = {
 
 local Detector = { isGameActive = false }
 function Detector.UpdateGameStatus()
-    -- check if ingame or not
+    -- check if in-game or not
     local player = Game.GetPlayer()
     local isInMenu = GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():IsPreGame()
 
     Detector.isGameActive = player and not isInMenu
-    Debug("Player is", Detector.isGameActive and "" or "not", "in game")
 end
 
 function Debug(...)
@@ -96,11 +96,11 @@ function GetOption(category, item)
     end
 
     local value = GameOptions.Get(category, item)
-    if value == "true" then
+    if tostring(value) == "true" then
         return true
     end
 
-    if value == "false" then
+    if tostring(value) == "false" then
         return false
     end
 
@@ -108,13 +108,13 @@ function GetOption(category, item)
         return tonumber(value)
     end
 
-	return value
+	logger.info("ERROR: Getting value for:", category, item..". Result returned:", value)
 end
 
 function SetOption(category, item, value, valueType)
     -- sets a live game setting, working out which method to use for different setting types
     if value == nil then
-        Debug("Skipping nil value:", category .. "/" .. item)
+        logger.info("ERROR: Skipping nil value:", category .. "/" .. item)
         return
     end
 
@@ -127,14 +127,15 @@ function SetOption(category, item, value, valueType)
         Game.GetSettingsSystem():GetVar(category, item):SetValue(value)
         return
     end
-
-    if value == "false" or value == false then
-        GameOptions.SetBool(category, item, false)
+    
+	if type(value) == "boolean" then
+		GameOptions.SetBool(category, item, value)
+		return
+	end
+	
+	if tostring(value) == "false" or tostring(value) == "true" then
+        GameOptions.SetBool(category, item, tostring(value) == "true")
         return
-    end
-
-    if value == "true" or value == true then
-        GameOptions.SetBool(category, item, true)
     end
 
     if tostring(value):match("^%-?%d+%.%d+$") or valueType == "float" then
@@ -147,7 +148,7 @@ function SetOption(category, item, value, valueType)
         return
     end
 
-    Debug("Unsupported GameOption:", category .. "/" .. item, "=", value)
+    logger.info("ERROR: Unsupported GameOption:", category .. "/" .. item, "=", value)
 end
 
 function LoadIni(path)
@@ -301,25 +302,46 @@ function ResetEngine()
     GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():RequestSaveUserSettings()
 end
 
-function EnableRegir(state)
-    -- wait 1.5 second to re-enable reGIR (but don't wait to disable)
-    logger.info("    (PTNext:", state and "Re-enabling" or "Disabling", "separate denoiser)")
-    local seconds = state == true and 1.5 or 0.0
+function PreparePTNext()
+    -- if not in PTNext mode, always disable ReGIR
+    -- otherwise disable PTNext in preparation for loading
+    if var.settings.mode ~= var.mode.PTNEXT then
+    	SetOption("Editor/ReGIR", "UseForDI", false)
+    	SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
+    	
+    	logger.info("    PTNext is not in use")
+    	config.ptnextActivated = false
+    	return
+    end
 
-    Wait(seconds, function()
-        SetOption("Editor/ReGIR", "UseForDI", state)
+	SetOption("Editor/ReGIR", "UseForDI", false)
+	SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
 
-        if not GetOption("RayTracing", "EnableNRD") then
-        	SetOption("Editor/RTXDI", "EnableSeparateDenoising", state)
-		end
+	logger.info("    PTNext is ready to load")
+	config.ptnextActivated = false
+	return
+end
+
+function EnablePTNext()
+    Wait(1.5, function()
+        SetOption("Editor/ReGIR", "UseForDI", true)
+
+		local usingNRD = GetOption("RayTracing", "EnableNRD")
+        if not usingNRD then
+        	logger.info("    (RR is in use)")
+            SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
+        else
+        	logger.info("    (NRD is in use)")
+        end
     end)
 
-    config.regirActive = state
+	config.ptnextActivated = true
+    logger.info("    PTNext is active")
 end
 
 function DoRainFix()
-    -- enable particle PT integration unless player is outdoors AND it's raining
-    if var.settings.indoors or not var.settings.rain then
+	-- enable particle PT integration unless player is outdoors AND it's raining
+	if var.settings.indoors or not var.settings.rain then
         logger.info("    (It's not raining: Enabling separate particle colour)")
         SetOption("Rendering", "DLSSDSeparateParticleColor", true)
         return
@@ -351,31 +373,27 @@ function DoRefreshEngine()
     end)
 end
 
-function DoGameStarting()
+function DoGameSessionStarted()
     -- do at game launch or start of loading a savegame
-    logger.info("[Game session starting]")
     if timer.paused then
+    	logger.info("    [Game started]")
         logger.info("    (Unpausing background functions)")
         timer.paused = false
     end
+    
+    PreparePTNext()
 end
 
-function DoGameExiting()
+function DoGameSessionEnding()
     -- do at game session end or exiting to main menu
     logger.info("...")
     logger.info("[Game session ending]")
     logger.info("    (Pausing background functions)")
     timer.paused = true
-    config.regirActive = false
+    config.ptnextActivated = false
     stats.fps = 0
 
     initUltraPlus()
-end
-
-function DoGameStarted()
-    if var.settings.mode == var.mode.PTNEXT and not config.regirActive then
-        EnableRegir(true)
-    end
 end
 
 function DoFastUpdate()
@@ -391,8 +409,10 @@ function DoFastUpdate()
         var.settings.indoors = testIndoors
         DoRainFix()
     end
-
-    DoGameStarted()
+    
+    if not config.ptnextActivated then
+    	EnablePTNext()
+    end
 end
 
 function DoLazyUpdate()
@@ -474,6 +494,8 @@ function initUltraPlus()
     config.SetVram(var.settings.vram)
 
     LoadIni("myownsettings.ini")
+    
+	PreparePTNext()
 end
 
 registerForEvent("onTweak", function()
@@ -483,42 +505,42 @@ registerForEvent("onTweak", function()
 end)
 
 registerForEvent("onInit", function()
-
     local file = io.open("debug", "r")
     if file then
         config.DEBUG = true
-        Debug("Enabling debug output")
+        logger.info("Enabling debug output")
     end
 
-    ObserveAfter('QuestTrackerGameController', 'OnInitialize', function(this)
-        DoGameStarting()
+    ObserveAfter('QuestTrackerGameController', 'OnInitialize', function()
+    	logger.info("[Entered game]")
+        DoGameSessionStarted()
     end)
 
-    Observe('QuestTrackerGameController', 'OnUninitialize', function(this)
-        DoGameExiting()
+    Observe('QuestTrackerGameController', 'OnUninitialize', function()
+        DoGameSessionEnding()
     end)
 
     Observe("CCTVCamera", "TakeControl", function(this, val)
-        logger.info("    (Camera control:", this, val..")")
+        logger.info(string.format("    (Camera control: %s %s)", this, val))
     end)
 
     ObserveAfter("CCTVCamera", "TakeControl", function(this, val)
-        logger.info("    (Camera control end:", this, val..")")
+        logger.info(string.format("    (Camera control end: %s %s)", this, val))
     end)
 
     initUltraPlus()
 end)
 
 registerForEvent("onOverlayOpen", function()
-    WindowOpen = true
+    config.WindowOpen = true
 end)
 
 registerForEvent("onOverlayClose", function()
-    WindowOpen = false
+    config.WindowOpen = false
 end)
 
 registerForEvent("onDraw", function()
-    if not WindowOpen then
+    if not config.WindowOpen then
         return
     end
 

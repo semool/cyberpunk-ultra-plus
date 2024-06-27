@@ -431,6 +431,12 @@ local options = {
     },
     RTOPTIONS = {
         {
+            item = "Enable",
+            name = "Enable Variable Rate Shading",
+            category = "RayTracing/VariableRateShading",
+            tooltip = "",
+        },
+        {
             item = "UseSSRFallback",
             name = "Use SSR Fallback",
             category = "Editor/PathTracing",
@@ -1042,6 +1048,24 @@ local options = {
         },
     },
     RTFLOAT = {
+        {
+            item = "VarianceCutoff",
+            name = "VRS Cutoff",
+            category = "RayTracing/VariableRateShading",
+            tooltip = "",
+        },
+        {
+            item = "MotionFactor",
+            name = "VRS Motion Factor",
+            category = "RayTracing/VariableRateShading",
+            tooltip = "",
+        },
+        {
+            item = "ScreenEdgeFactor",
+            name = "VRS Screen Edge Factor",
+            category = "RayTracing/VariableRateShading",
+            tooltip = "",
+        },
         {
             item = "PrepassBlurRadius",
             name = "ReLAX DI Diffuse Prepass Blur Radius",

@@ -23,6 +23,8 @@ function config.SetVram(vram)
 
         SetOption("Streaming", "PrecacheDistance", "0.0")
         SetOption("Streaming", "MinStreamingDistance", "1.0")
+        
+        logger.info("(NSGDD compatibility force-enabled due to low VRAM)")
 
         return
     end
@@ -43,6 +45,8 @@ function config.SetVram(vram)
 
         SetOption("Streaming", "PrecacheDistance", "0.0")
         SetOption("Streaming", "MinStreamingDistance", "1.0")
+        
+        logger.info("(NSGDD compatibility force-enabled due to low VRAM)")
 
         return
     end
@@ -63,6 +67,8 @@ function config.SetVram(vram)
 
         SetOption("Streaming", "PrecacheDistance", "0.0")
         SetOption("Streaming", "MinStreamingDistance", "1.0")
+        
+        logger.info("(NSGDD compatibility force-enabled due to low VRAM)")
 
         return
     end
@@ -82,9 +88,11 @@ function config.SetVram(vram)
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
 
         if var.settings.nsgddCompatible == false then
+        	logger.info("    (NSGDD compatibility disabled)")
             SetOption("Streaming", "PrecacheDistance", "10.0")
             SetOption("Streaming", "MinStreamingDistance", "20.0")
         else
+        	logger.info("    (NSGDD compatibility enabled)")
             SetOption("Streaming", "PrecacheDistance", "0.0")
             SetOption("Streaming", "MinStreamingDistance", "1.0")
         end
@@ -107,9 +115,11 @@ function config.SetVram(vram)
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
 
         if var.settings.nsgddCompatible == false then
+        	logger.info("    (NSGDD compatibility disabled)")
             SetOption("Streaming", "PrecacheDistance", "10.0")
             SetOption("Streaming", "MinStreamingDistance", "20.0")
         else
+        	logger.info("    (NSGDD compatibility enabled)")
             SetOption("Streaming", "PrecacheDistance", "0.0")
             SetOption("Streaming", "MinStreamingDistance", "1.0")
         end
@@ -132,9 +142,11 @@ function config.SetVram(vram)
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
 
         if var.settings.nsgddCompatible == false then
+        	logger.info("    (NSGDD compatibility disabled)")
             SetOption("Streaming", "PrecacheDistance", "15.0")
             SetOption("Streaming", "MinStreamingDistance", "30.0")
         else
+        	logger.info("    (NSGDD compatibility enabled)")
             SetOption("Streaming", "PrecacheDistance", "0.0")
             SetOption("Streaming", "MinStreamingDistance", "1.0")
         end
@@ -157,9 +169,11 @@ function config.SetVram(vram)
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
 
         if var.settings.nsgddCompatible == false then
+        	logger.info("    (NSGDD compatibility disabled)")
             SetOption("Streaming", "PrecacheDistance", "25.0")
             SetOption("Streaming", "MinStreamingDistance", "50.0")
         else
+        	logger.info("    (NSGDD compatibility enabled)")
             SetOption("Streaming", "PrecacheDistance", "0.0")
             SetOption("Streaming", "MinStreamingDistance", "1.0")
         end
@@ -182,9 +196,11 @@ function config.SetVram(vram)
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "2")
 
         if var.settings.nsgddCompatible == false then
+        	logger.info("    (NSGDD compatibility disabled)")
             SetOption("Streaming", "PrecacheDistance", "30.0")
             SetOption("Streaming", "MinStreamingDistance", "60.0")
         else
+        	logger.info("    (NSGDD compatibility enabled)")
             SetOption("Streaming", "PrecacheDistance", "0.0")
             SetOption("Streaming", "MinStreamingDistance", "1.0")
         end
@@ -207,9 +223,11 @@ function config.SetVram(vram)
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "2")
 
         if var.settings.nsgddCompatible == false then
+        	logger.info("    (NSGDD compatibility disabled)")
             SetOption("Streaming", "PrecacheDistance", "40.0")
             SetOption("Streaming", "MinStreamingDistance", "80.0")
         else
+        	logger.info("    (NSGDD compatibility enabled)")
             SetOption("Streaming", "PrecacheDistance", "0.0")
             SetOption("Streaming", "MinStreamingDistance", "1.0")
         end
