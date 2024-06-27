@@ -3,351 +3,384 @@
 local options = require("options")
 local var = require("variables")
 local config = {
-    SetMode = require("setmode").SetMode,
-    SetQuality = require("setquality").SetQuality,
-    SetVram = require("setvram").SetVram,
-    DEBUG = true,
-    isDebugTabActive = false,
-    windowWidth = 485,
-    windowHeight = 454,
-    windowHeightDebug = 910,
-    fpsWidth = 60,
+	SetMode = require("setmode").SetMode,
+	SetQuality = require("setquality").SetQuality,
+	SetSceneScale = require("setscenescale").SetSceneScale,
+	SetVram = require("setvram").SetVram,
+	DEBUG = true,
+	isDebugTabActive = false,
+	windowWidth = 485,
+	windowHeight = 454,
+	windowHeightDebug = 910,
+	fpsWidth = 60,
 }
 local stats = {
-    fps = 0,
+	fps = 0,
 }
 local toggled
 local ui = {
 
-    line = function()
-        ImGui.Spacing()
-        ImGui.Separator()
-        ImGui.Spacing()
-    end,
+	line = function()
+		ImGui.Spacing()
+		ImGui.Separator()
+		ImGui.Spacing()
+	end,
 
-    space = function()
-        ImGui.Spacing()
-    end,
+	space = function()
+		ImGui.Spacing()
+	end,
 
-    width = function(px)
-        ImGui.SetNextItemWidth(px)
-    end,
+	width = function(px)
+		ImGui.SetNextItemWidth(px)
+	end,
 
-    align = function()
-        ImGui.SameLine()
-    end,
+	align = function()
+		ImGui.SameLine()
+	end,
 
-    text = function(text)
-        ImGui.Text(text)
-    end,
+	text = function(text)
+		ImGui.Text(text)
+	end,
 
-    section = function(text)
-        ImGui.Spacing()
-        ImGui.Separator()
-        ImGui.TextWrapped(text)
-        ImGui.Spacing()
-    end,
+	section = function(text)
+		ImGui.Spacing()
+		ImGui.Separator()
+		ImGui.TextWrapped(text)
+		ImGui.Spacing()
+	end,
 
-    heading = function(text)
-        ImGui.Spacing()
-        ImGui.Text("Skin/Hair")
-        ImGui.Spacing()
-    end,
+	heading = function(text)
+		ImGui.Spacing()
+		ImGui.Text("Skin/Hair")
+		ImGui.Spacing()
+	end,
 
-    tooltip = function(text)
-        if ImGui.IsItemHovered() and text ~= "" then
-            ImGui.BeginTooltip()
-            ImGui.SetTooltip(text)
-            ImGui.EndTooltip()
-        end
-    end,
+	tooltip = function(text)
+		if ImGui.IsItemHovered() and text ~= "" then
+			ImGui.BeginTooltip()
+			ImGui.SetTooltip(text)
+			ImGui.EndTooltip()
+		end
+	end,
 }
 
-function renderTabEngineDrawer()
+local function renderTabEngineDrawer()
 
-    ui.text("NOTE: Once happy, reload a save to fully activate the mode")
+	ui.text("NOTE: Once happy, reload a save to fully activate the mode")
 
-    if ImGui.CollapsingHeader("Rendering Mode", ImGuiTreeNodeFlags.DefaultOpen) then
-        --[[
-        if ImGui.RadioButton( "Raster (no ray tracing or path tracing)", var.settings.mode == var.mode.RASTER ) then
-            var.settings.mode = var.mode.RASTER
-            config.SetMode( var.settings.mode )
-        end
+	if ImGui.CollapsingHeader("Rendering Mode", ImGuiTreeNodeFlags.DefaultOpen) then
+		--[[
+		if ImGui.RadioButton( "Raster (no ray tracing or path tracing)", var.settings.mode == var.mode.RASTER ) then
+			var.settings.mode = var.mode.RASTER
+			config.SetMode( var.settings.mode )
+		end
 ]]
-        if ImGui.RadioButton("RT Only", var.settings.mode == var.mode.RT_ONLY) then
-            var.settings.mode = var.mode.RT_ONLY
-            config.SetMode(var.settings.mode)
-            config.SetQuality(var.settings.quality)
-            LoadIni("myownsettings.ini")
-            SaveSettings()
-        end
-        ui.tooltip("Regular ray tracing, with optimisations and fixes.")
+		if ImGui.RadioButton("RT Only", var.settings.mode == var.mode.RT_ONLY) then
+			var.settings.mode = var.mode.RT_ONLY
+			config.SetMode(var.settings.mode)
+			config.SetQuality(var.settings.quality)
+			config.SetSceneScale(var.settings.sceneScale)
+			SaveSettings()
+		end
+		ui.tooltip("Regular ray tracing, with optimisations and fixes.")
 
-        ui.align()
-        if ImGui.RadioButton("RT+PT", var.settings.mode == var.mode.RT_PT) then
-            var.settings.mode = var.mode.RT_PT
-            config.SetMode(var.settings.mode)
-            config.SetQuality(var.settings.quality)
-            LoadIni("myownsettings.ini")
-            SaveSettings()
-        end
-        ui.tooltip("Normal raytracing plus path traced bounce lighting. Leave Path Tracing\ndisabled in graphics options for this to work correctly.")
+		ui.align()
+		if ImGui.RadioButton("RT+PT", var.settings.mode == var.mode.RT_PT) then
+			var.settings.mode = var.mode.RT_PT
+			config.SetMode(var.settings.mode)
+			config.SetQuality(var.settings.quality)
+			config.SetSceneScale(var.settings.sceneScale)
+			SaveSettings()
+		end
+		ui.tooltip("Normal raytracing plus path traced bounce lighting. Leave Path Tracing\ndisabled in graphics options for this to work correctly.")
 
-        ui.align()
-        if ImGui.RadioButton("PT20", var.settings.mode == var.mode.PT20) then
-            var.settings.mode = var.mode.PT20
-            config.SetMode(var.settings.mode)
-            config.SetQuality(var.settings.quality)
-            LoadIni("myownsettings.ini")
-            SaveSettings()
-        end
-        ui.tooltip("Path tracing from Cyberpunk 2.0.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.")
+		ui.align()
+		if ImGui.RadioButton("PT20", var.settings.mode == var.mode.PT20) then
+			var.settings.mode = var.mode.PT20
+			config.SetMode(var.settings.mode)
+			config.SetQuality(var.settings.quality)
+			config.SetSceneScale(var.settings.sceneScale)
+			SaveSettings()
+		end
+		ui.tooltip("Path tracing from Cyberpunk 2.0.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.")
 
-        ui.align()
-        if ImGui.RadioButton("PT21", var.settings.mode == var.mode.PT21) then
-            var.settings.mode = var.mode.PT21
-            config.SetMode(var.settings.mode)
-            config.SetQuality(var.settings.quality)
-            LoadIni("myownsettings.ini")
-            SaveSettings()
-        end
-        ui.tooltip("Path tracing from Cyberpunk 2.10+.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.")
+		ui.align()
+		if ImGui.RadioButton("PT21", var.settings.mode == var.mode.PT21) then
+			var.settings.mode = var.mode.PT21
+			config.SetMode(var.settings.mode)
+			config.SetQuality(var.settings.quality)
+			config.SetSceneScale(var.settings.sceneScale)
+			SaveSettings()
+		end
+		ui.tooltip("Path tracing from Cyberpunk 2.10+.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.")
 
-        ui.align()
-        if ImGui.RadioButton("PTNext", var.settings.mode == var.mode.PTNEXT) then
-            var.settings.mode = var.mode.PTNEXT
-            config.SetMode(var.settings.mode)
-            config.SetQuality(var.settings.quality)
-            LoadIni("myownsettings.ini")
-            SaveSettings()
-        end
-        ui.tooltip("For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics?DLSS will also require a reload.\n\nNOTE: For other PT modes we recommend increasing DLSS/FSR3 and lowering PT\nquality for the best visuals. However for PTNext we recommend the opposite:\nRun PTNext as high as you can and turn upscaling down a step.")
-    end
+		ui.align()
+		if ImGui.RadioButton("PTNext", var.settings.mode == var.mode.PTNEXT) then
+			var.settings.mode = var.mode.PTNEXT
+			config.SetMode(var.settings.mode)
+			config.SetQuality(var.settings.quality)
+			config.SetSceneScale(var.settings.sceneScale)
+			SaveSettings()
+		end
+		ui.tooltip("For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics?DLSS will also require a reload.\n\nNOTE: For other PT modes we recommend increasing DLSS/FSR3 and lowering PT\nquality for the best visuals. However for PTNext we recommend the opposite:\nRun PTNext as high as you can and turn upscaling down a step.")
+	end
 
-    ui.space()
-    if ImGui.CollapsingHeader("Quality Level", ImGuiTreeNodeFlags.DefaultOpen) then
-        if ImGui.RadioButton("Vanilla##QualityVanilla", var.settings.quality == var.quality.VANILLA) then
-            var.settings.quality = var.quality.VANILLA
-            config.SetQuality(var.settings.quality)
-            LoadIni("myownsettings.ini")
-            SaveSettings()
-        end
+	ui.space()
+	if ImGui.CollapsingHeader("Quality Level", ImGuiTreeNodeFlags.DefaultOpen) then
+		if ImGui.RadioButton("Vanilla##Quality", var.settings.quality == var.quality.VANILLA) then
+			var.settings.quality = var.quality.VANILLA
+			config.SetQuality(var.settings.quality)
+			SaveSettings()
+		end
 
-        ui.align()
-        if ImGui.RadioButton("Low", var.settings.quality == var.quality.LOW) then
-            var.settings.quality = var.quality.LOW
-            LoadIni("config_low.ini")
-            config.SetQuality(var.settings.quality)
-            LoadIni("myownsettings.ini")
-            SaveSettings()
-        end
+		ui.align()
+		if ImGui.RadioButton("Low", var.settings.quality == var.quality.LOW) then
+			var.settings.quality = var.quality.LOW
+			LoadIni("config_low.ini")
+			config.SetQuality(var.settings.quality)
+			SaveSettings()
+		end
 
-        ui.align()
-        if ImGui.RadioButton("Medium", var.settings.quality == var.quality.MEDIUM) then
-            var.settings.quality = var.quality.MEDIUM
-            LoadIni("config_medium.ini")
-            config.SetQuality(var.settings.quality)
-            LoadIni("myownsettings.ini")
-            SaveSettings()
-        end
+		ui.align()
+		if ImGui.RadioButton("Medium", var.settings.quality == var.quality.MEDIUM) then
+			var.settings.quality = var.quality.MEDIUM
+			LoadIni("config_medium.ini")
+			config.SetQuality(var.settings.quality)
+			SaveSettings()
+		end
 
-        ui.align()
-        if ImGui.RadioButton("High", var.settings.quality == var.quality.HIGH) then
-            var.settings.quality = var.quality.HIGH
-            LoadIni("config_high.ini")
-            config.SetQuality(var.settings.quality)
-            LoadIni("myownsettings.ini")
-            SaveSettings()
-        end
+		ui.align()
+		if ImGui.RadioButton("High", var.settings.quality == var.quality.HIGH) then
+			var.settings.quality = var.quality.HIGH
+			LoadIni("config_high.ini")
+			config.SetQuality(var.settings.quality)
+			SaveSettings()
+		end
 
-        ui.align()
-        if ImGui.RadioButton("Insane", var.settings.quality == var.quality.INSANE) then
-            var.settings.quality = var.quality.INSANE
-            LoadIni("config_insane.ini")
-            config.SetQuality(var.settings.quality)
-            LoadIni("myownsettings.ini")
-            SaveSettings()
-        end
-    end
+		ui.align()
+		if ImGui.RadioButton("Insane", var.settings.quality == var.quality.INSANE) then
+			var.settings.quality = var.quality.INSANE
+			LoadIni("config_insane.ini")
+			config.SetQuality(var.settings.quality)
+			SaveSettings()
+		end
+	end
 
-    ui.space()
-    if ImGui.CollapsingHeader("VRAM Configuration (GB)", ImGuiTreeNodeFlags.DefaultOpen) then
-        local vramSorted = {}
-        for key, value in pairs(var.vram) do
-            table.insert(vramSorted, value)
-        end
+	ui.space()
+	if ImGui.CollapsingHeader("Scene Scale", ImGuiTreeNodeFlags.DefaultOpen) then
+		if ImGui.RadioButton("Low##SS", var.settings.sceneScale == var.sceneScale.LOW) then
+			var.settings.sceneScale = var.sceneScale.LOW
+			config.SetSceneScale(var.settings.sceneScale)
+			SaveSettings()
+		end
 
-        table.sort(vramSorted)
+		ui.align()
+		if ImGui.RadioButton("Vanilla##SS", var.settings.sceneScale == var.sceneScale.VANILLA) then
+			var.settings.sceneScale = var.sceneScale.VANILLA
+			config.SetSceneScale(var.settings.sceneScale)
+			SaveSettings()
+		end
 
-        for _, v in ipairs(vramSorted) do
-            if ImGui.RadioButton(tostring(v), var.settings.vram == v) then
-                var.settings.vram = v
-                config.SetVram(var.settings.vram)
-                SaveSettings()
-            end
-            ui.align()
-        end
-    end
+		ui.align()
+		if ImGui.RadioButton("Medium##SS", var.settings.sceneScale == var.sceneScale.MEDIUM) then
+			var.settings.sceneScale = var.sceneScale.MEDIUM
+			config.SetSceneScale(var.settings.sceneScale)
+			SaveSettings()
+		end
 
-    ui.space()
-    if ImGui.CollapsingHeader("Tweaks", ImGuiTreeNodeFlags.DefaultOpen) then
-        for _, setting in pairs(options.Tweaks) do
-            setting.value = GetOption(setting.category, setting.item)
-            setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-            ui.tooltip(setting.tooltip)
+		ui.align()
+		if ImGui.RadioButton("High##SS", var.settings.sceneScale == var.sceneScale.HIGH) then
+			var.settings.sceneScale = var.sceneScale.HIGH
+			config.SetSceneScale(var.settings.sceneScale)
+			SaveSettings()
+		end
 
-            if toggled then
-                SetOption(setting.category, setting.item, setting.value)
+		ui.align()
+		if ImGui.RadioButton("Insane##SS", var.settings.sceneScale == var.sceneScale.INSANE) then
+			var.settings.sceneScale = var.sceneScale.INSANE
+			config.SetSceneScale(var.settings.sceneScale)
+			SaveSettings()
+		end
+	end
 
-                if setting.item == "nsgddCompatible" then
-                    config.SetVram(var.settings.vram)
-                end
+	ui.space()
+	if ImGui.CollapsingHeader("VRAM Configuration (GB)", ImGuiTreeNodeFlags.DefaultOpen) then
+		local vramSorted = {}
+		for key, value in pairs(var.vram) do
+			table.insert(vramSorted, value)
+		end
 
-                SaveSettings()
-            end
-        end
-    end
+		table.sort(vramSorted)
+
+		for _, v in ipairs(vramSorted) do
+			if ImGui.RadioButton(tostring(v), var.settings.vram == v) then
+				var.settings.vram = v
+				config.SetVram(var.settings.vram)
+				SaveSettings()
+			end
+			ui.align()
+		end
+	end
+
+	ui.space()
+	if ImGui.CollapsingHeader("Tweaks", ImGuiTreeNodeFlags.DefaultOpen) then
+		for _, setting in pairs(options.Tweaks) do
+			setting.value = GetOption(setting.category, setting.item)
+			setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+			ui.tooltip(setting.tooltip)
+
+			if toggled then
+				SetOption(setting.category, setting.item, setting.value)
+
+				if setting.item == "nsgddCompatible" then
+					config.SetVram(var.settings.vram)
+				end
+
+				SaveSettings()
+			end
+		end
+	end
 end
 
-function renderRenderingFeaturesDrawer()
-    ui.space()
-    for _, setting in pairs(options.Features) do
-        setting.value = GetOption(setting.category, setting.item)
-        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-        ui.tooltip(setting.tooltip)
+local function renderRenderingFeaturesDrawer()
+	ui.space()
+	for _, setting in pairs(options.Features) do
+		setting.value = GetOption(setting.category, setting.item)
+		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+		ui.tooltip(setting.tooltip)
 
-        if toggled then
-            SetOption(setting.category, setting.item, setting.value)
-            SaveSettings()
-        end
-    end
+		if toggled then
+			SetOption(setting.category, setting.item, setting.value)
+			SaveSettings()
+		end
+	end
 end
 
-function renderDebugDrawer()
-    ui.line()
-    for _, setting in pairs(options.RTXDI) do
-        setting.value = GetOption(setting.category, setting.item)
-        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-        ui.tooltip(setting.tooltip)
+local function renderDebugDrawer()
+	ui.line()
+	for _, setting in pairs(options.RTXDI) do
+		setting.value = GetOption(setting.category, setting.item)
+		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+		ui.tooltip(setting.tooltip)
 
-        if toggled then
-            SetOption(setting.category, setting.item, setting.value)
-            SaveSettings()
-        end
-    end
+		if toggled then
+			SetOption(setting.category, setting.item, setting.value)
+			SaveSettings()
+		end
+	end
 
-    ui.line()
-    for _, setting in pairs(options.RTXGI) do
-        setting.value = GetOption(setting.category, setting.item)
-        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-        ui.tooltip(setting.tooltip)
+	ui.line()
+	for _, setting in pairs(options.RTXGI) do
+		setting.value = GetOption(setting.category, setting.item)
+		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+		ui.tooltip(setting.tooltip)
 
-        if toggled then
-            SetOption(setting.category, setting.item, setting.value)
-            SaveSettings()
-        end
-    end
+		if toggled then
+			SetOption(setting.category, setting.item, setting.value)
+			SaveSettings()
+		end
+	end
 
-    ui.line()
-    for _, setting in pairs(options.REGIR) do
-        setting.value = GetOption(setting.category, setting.item)
-        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-        ui.tooltip(setting.tooltip)
+	ui.line()
+	for _, setting in pairs(options.REGIR) do
+		setting.value = GetOption(setting.category, setting.item)
+		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+		ui.tooltip(setting.tooltip)
 
-        if toggled then
-            SetOption(setting.category, setting.item, setting.value)
-            SaveSettings()
-        end
-    end
+		if toggled then
+			SetOption(setting.category, setting.item, setting.value)
+			SaveSettings()
+		end
+	end
 
-    ui.line()
-    for _, setting in pairs(options.RELAX) do
-        setting.value = GetOption(setting.category, setting.item)
-        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-        ui.tooltip(setting.tooltip)
+	ui.line()
+	for _, setting in pairs(options.RELAX) do
+		setting.value = GetOption(setting.category, setting.item)
+		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+		ui.tooltip(setting.tooltip)
 
-        if toggled then
-            SetOption(setting.category, setting.item, setting.value)
-            SaveSettings()
-        end
-    end
+		if toggled then
+			SetOption(setting.category, setting.item, setting.value)
+			SaveSettings()
+		end
+	end
 
-    ui.line()
-    for _, setting in pairs(options.NRD) do
-        setting.value = GetOption(setting.category, setting.item)
-        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-        ui.tooltip(setting.tooltip)
+	ui.line()
+	for _, setting in pairs(options.NRD) do
+		setting.value = GetOption(setting.category, setting.item)
+		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+		ui.tooltip(setting.tooltip)
 
-        if toggled then
-            SetOption(setting.category, setting.item, setting.value)
-            SaveSettings()
-        end
-    end
+		if toggled then
+			SetOption(setting.category, setting.item, setting.value)
+			SaveSettings()
+		end
+	end
 
-    ui.line()
-    for _, setting in pairs(options.RTOPTIONS) do
-        setting.value = GetOption(setting.category, setting.item)
-        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-        ui.tooltip(setting.tooltip)
+	ui.line()
+	for _, setting in pairs(options.RTOPTIONS) do
+		setting.value = GetOption(setting.category, setting.item)
+		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+		ui.tooltip(setting.tooltip)
 
-        if toggled then
-            SetOption(setting.category, setting.item, setting.value)
-            SaveSettings()
-        end
-    end
+		if toggled then
+			SetOption(setting.category, setting.item, setting.value)
+			SaveSettings()
+		end
+	end
 
-    ui.line()
-    for _, setting in pairs(options.SHARC) do
-        setting.value = GetOption(setting.category, setting.item)
-        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-        ui.tooltip(setting.tooltip)
+	ui.line()
+	for _, setting in pairs(options.SHARC) do
+		setting.value = GetOption(setting.category, setting.item)
+		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+		ui.tooltip(setting.tooltip)
 
-        if toggled then
-            SetOption(setting.category, setting.item, setting.value)
-            SaveSettings()
-        end
-    end
+		if toggled then
+			SetOption(setting.category, setting.item, setting.value)
+			SaveSettings()
+		end
+	end
 
-    ui.line()
-    for _, setting in pairs(options.RTINT) do
-        setting.value = GetOption(setting.category, setting.item)
+	ui.line()
+	for _, setting in pairs(options.RTINT) do
+		setting.value = GetOption(setting.category, setting.item)
 		ui.width(140)
-        setting.value, toggled = ImGui.InputInt(setting.name, setting.value)
-        ui.tooltip(setting.tooltip)
+		setting.value, toggled = ImGui.InputInt(setting.name, setting.value)
+		ui.tooltip(setting.tooltip)
 
-        if toggled then
-            SetOption(setting.category, setting.item, setting.value)
-            SaveSettings()
-        end
-    end
+		if toggled then
+			SetOption(setting.category, setting.item, setting.value)
+			SaveSettings()
+		end
+	end
 
-    ui.line()
-    for _, setting in pairs(options.RTFLOAT) do
-        setting.value = GetOption(setting.category, setting.item)
+	ui.line()
+	for _, setting in pairs(options.RTFLOAT) do
+		setting.value = GetOption(setting.category, setting.item)
 		ui.width(180)
-        setting.value, toggled = ImGui.InputFloat(setting.name, tonumber(setting.value))
-        ui.tooltip(setting.tooltip)
+		setting.value, toggled = ImGui.InputFloat(setting.name, tonumber(setting.value))
+		ui.tooltip(setting.tooltip)
 
-        if toggled then
-            SetOption(setting.category, setting.item, setting.value, "float")
-            SaveSettings()
-        end
-    end
+		if toggled then
+			SetOption(setting.category, setting.item, setting.value, "float")
+			SaveSettings()
+		end
+	end
 end
 
-function renderTabs()
-    if ImGui.BeginTabBar("Tabs") then
-        if ImGui.BeginTabItem("Ultra+ Config") then
-            renderTabEngineDrawer()
-            ImGui.EndTabItem()
-        end
+local function renderTabs()
+	if ImGui.BeginTabBar("Tabs") then
+		if ImGui.BeginTabItem("Ultra+ Config") then
+			renderTabEngineDrawer()
+			ImGui.EndTabItem()
+		end
 
-        if ImGui.BeginTabItem("Rendering Features") then
-            renderRenderingFeaturesDrawer()
-            ImGui.EndTabItem()
-        end
+		if ImGui.BeginTabItem("Rendering Features") then
+			renderRenderingFeaturesDrawer()
+			ImGui.EndTabItem()
+		end
 
-        if ImGui.BeginTabItem("Debug") and config.DEBUG then
+		if ImGui.BeginTabItem("Debug") and config.DEBUG then
 			config.isDebugTabActive = true
 			renderDebugDrawer()
 			ImGui.EndTabItem()
@@ -355,7 +388,7 @@ function renderTabs()
 			config.isDebugTabActive = false
 		end
 
-        ImGui.EndTabBar()
+		ImGui.EndTabBar()
 
 		if stats.fps == 0 then
 			return
@@ -363,31 +396,31 @@ function renderTabs()
 
 		local padding = config.windowWidth - config.fpsWidth
 		config.fpsWidth = ImGui.CalcTextSize("0000000000000")
-        ImGui.SameLine(padding)
-        ImGui.Text("Real FPS: "..tostring(stats.fps))
-    end
+		ImGui.SameLine(padding)
+		ImGui.Text("Real FPS: "..tostring(math.floor(stats.fps)))
+	end
 end
 
 ui.renderUI = function(fps)
 	stats.fps = fps
 
-    ImGui.SetNextWindowPos(10, 300, ImGuiCond.FirstUseEver)
+	ImGui.SetNextWindowPos(10, 300, ImGuiCond.FirstUseEver)
 
-    config.windowWidth = ImGui.CalcTextSize("000000000000000000000000000000000000000000000000")
-	config.windowHeight = config.windowWidth * 0.95
+	config.windowWidth = ImGui.CalcTextSize("000000000000000000000000000000000000000000000000")
+	config.windowHeight = config.windowWidth * 1.1
 
-    if config.isDebugTabActive then
-    	ImGui.SetNextWindowSize(config.windowWidth, config.windowHeightDebug)
-    else
-       	ImGui.SetNextWindowSize(config.windowWidth, config.windowHeight)
+	if config.isDebugTabActive then
+		ImGui.SetNextWindowSize(config.windowWidth, config.windowHeightDebug)
+	else
+	   	ImGui.SetNextWindowSize(config.windowWidth, config.windowHeight)
 	end
 
-    -- begin actual render
-    if ImGui.Begin("Ultra+ v"..UltraPlus.__VERSION, true) then
-        ImGui.SetWindowFontScale(var.settings.uiScale)
-        renderTabs()
-        ImGui.End()
-    end
+	-- begin actual render
+	if ImGui.Begin("Ultra+ v"..UltraPlus.__VERSION, true) then
+		ImGui.SetWindowFontScale(var.settings.uiScale)
+		renderTabs()
+		ImGui.End()
+	end
 end
 
 return ui
