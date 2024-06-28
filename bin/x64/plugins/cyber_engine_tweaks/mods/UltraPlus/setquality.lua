@@ -101,6 +101,11 @@ function config.SetQuality(quality)
 			return
 		end
 
+		if var.settings.mode == var.mode.RTOnly then
+			SetOption("RayTracing", "TracingRadius", "100.0")
+			return
+		end
+
 		if var.settings.mode == var.mode.RT_PT then
 			SetOption("RayTracing", "TracingRadius", "100.0")
 			SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
@@ -186,6 +191,11 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
 			SetOption("Editor/SHARC", "DownscaleFactor", "7")
+			return
+		end
+
+		if var.settings.mode == var.mode.RTOnly then
+			SetOption("RayTracing", "TracingRadius", "200.0")
 			return
 		end
 
@@ -277,6 +287,11 @@ function config.SetQuality(quality)
 			return
 		end
 
+		if var.settings.mode == var.mode.RTOnly then
+			SetOption("RayTracing", "TracingRadius", "200.0")
+			return
+		end
+
 		if var.settings.mode == var.mode.RT_PT then
 			SetOption("RayTracing", "TracingRadius", "200.0")
 			SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
@@ -362,6 +377,11 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "4")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
 			SetOption("Editor/SHARC", "DownscaleFactor", "3")
+			return
+		end
+
+		if var.settings.mode == var.mode.RTOnly then
+			SetOption("RayTracing", "TracingRadius", "1000.0")
 			return
 		end
 

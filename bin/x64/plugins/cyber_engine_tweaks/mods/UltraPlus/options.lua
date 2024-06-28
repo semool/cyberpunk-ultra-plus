@@ -26,12 +26,6 @@ local options = {
 			category = "RayTracing/Reference",
 			tooltip = "RIS is resampled importance sampling. Disable this if you use reLIGHT\n(CP Default: On)",
 		},
-		{
-			item = "EnableSeparateDenoising",
-			name = "Enable RTXDI Separate Denoising",
-			category = "Editor/RTXDI",
-			tooltip = "NOTE: With RR disabled, you may need to untick this and reload for now for\nNRD to work correctly (CP Default: On)",
-		},
 	},
 	Features = {
 		{
@@ -127,6 +121,12 @@ local options = {
 	},
 	RTXDI = {
 		{
+			item = "EnableSeparateDenoising",
+			name = "Enable Separate Denoising",
+			category = "Editor/RTXDI",
+			tooltip = "Denoise Indirect/Direct lighting seperately, quality improvement and fixes foilage lighting",
+		},
+		{
 			item = "UpdateUseHalfFloat",
 			name = "Update UseHalf Float (CTD warning)",
 			category = "RayTracing/DynamicInstance",
@@ -167,12 +167,6 @@ local options = {
 			name = "Enable Fused Spatiotemporal DI",
 			category = "Editor/RTXDI",
 			tooltip = "Perform Spatio-Temporal sampling in a single pass/shader, operates on the last frame vs current+previous without",
-		},
-		{
-			item = "EnableSeparateDenoising",
-			name = "Enable Separate Denoising",
-			category = "Editor/RTXDI",
-			tooltip = "Denoise Indirect/Direct lighting seperately, quality improvement and fixes foilage lighting",
 		},
 		{
 			item = "EnableRTXDIDenoising",

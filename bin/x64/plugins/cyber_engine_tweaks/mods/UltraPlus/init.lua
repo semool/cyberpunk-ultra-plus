@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '4.6.0',
+	__VERSION	 = '4.7.1',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -31,10 +31,12 @@ local config = {
 	SetSceneScale = require("setscenescale").SetSceneScale,
 	SetDLSS = require("setdlss").SetDLSS,
 	SetVram = require("setvram").SetVram,
+	AutoScale = require("perceptualautoscale").AutoScale,
+	SetDaytime = require("daytimetasks").SetDaytime,
 	DEBUG = false,
-	ptnextActivated = false,
+	PTNextActivated = false,
 	WindowOpen = false,
-	TargetFps = 30,
+	PreviousWeather = nil,
 }
 local stats = {
 	fps = 0,
@@ -44,8 +46,8 @@ local timer = {
 	fast = 0,
 	weather = 0,
 	paused = false,
-	LAZY = 10.0,
 	FAST = 1.0,
+	LAZY = 10.0,
 	WEATHER = 910,		  -- 15:10 hours
 }
 
@@ -261,7 +263,7 @@ function SaveSettings()
 
 	for _, currentCategory in pairs(settingsCategories) do
 		for _, currentSetting in pairs(currentCategory) do
-			UltraPlus[currentSetting.item] = currentSetting.value
+			UltraPlus[currentSetting.item] = GetOption(currentSetting.category, currentSetting.item)
 		end
 	end
 
@@ -270,6 +272,9 @@ function SaveSettings()
 	UltraPlus["internal.sceneScale"] = var.settings.sceneScale
 	UltraPlus["internal.vram"] = var.settings.vram
 	UltraPlus["internal.nsgddCompatible"] = var.settings.nsgddCompatible
+	UltraPlus["internal.enableTargetFps"] = var.settings.enableTargetFps
+	UltraPlus["internal.targetFps"] = var.settings.targetFps
+	UltraPlus["internal.enableConsole"] = var.settings.enableConsole
 
 	local settingsTable = { UltraPlus = UltraPlus }
 
@@ -321,7 +326,7 @@ function PreparePTNext()
 		SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
 		
 		logger.info("    PTNext is not in use")
-		config.ptnextActivated = false
+		config.PTNextActivated = false
 		return
 	end
 
@@ -329,14 +334,14 @@ function PreparePTNext()
 	SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
 
 	logger.info("    PTNext is ready to load")
-	config.ptnextActivated = false
+	config.PTNextActivated = false
 	return
 end
 
 function EnablePTNext()
 	Wait(1.5, function()
 		SetOption("Editor/ReGIR", "UseForDI", true)
-
+--[[
 		local usingNRD = GetOption("RayTracing", "EnableNRD")
 		if not usingNRD then
 			logger.info("    (RR is in use)")
@@ -344,9 +349,10 @@ function EnablePTNext()
 		else
 			logger.info("    (NRD is in use)")
 		end
+]]
 	end)
 
-	config.ptnextActivated = true
+	config.PTNextActivated = true
 	logger.info("    PTNext is active")
 end
 
@@ -374,6 +380,21 @@ function DoRRFix()
 	timer.paused = false
 end
 
+function GetGameHour()
+    return Game.GetTimeSystem():GetGameTime():Hours()
+end
+
+function GetCurrentWeather()
+    return Game.GetWeatherSystem():GetCurrentWeather()
+end
+
+function BumpWeather()
+    local weatherTypes = {"clear", "cloudy", "rain", "fog"}
+    local randomWeather = weatherTypes[math.random(#weatherTypes)]
+    Game.GetWeatherSystem():RequestNewWeather(randomWeather)
+    logger.info("Changed weather to:", randomWeather)
+end
+
 function DoRefreshEngine()
 	-- hack to force the engine to warm reload
 	logger.info("Refreshing Engine...")
@@ -391,7 +412,9 @@ function DoGameSessionStarted()
 		logger.info("    (Unpausing background functions)")
 		timer.paused = false
 	end
-	
+
+	config.SetDaytime(GetGameHour())
+
 	PreparePTNext()
 end
 
@@ -401,7 +424,7 @@ function DoGameSessionEnding()
 	logger.info("[Game session ending]")
 	logger.info("    (Pausing background functions)")
 	timer.paused = true
-	config.ptnextActivated = false
+	config.PTNextActivated = false
 	stats.fps = 0
 
 	InitUltraPlus()
@@ -413,22 +436,31 @@ function DoFastUpdate()
 
 	local testRain = Game.GetWeatherSystem():GetRainIntensity() > 0 and true or false
 	local testIndoors = IsEntityInInteriorArea(GetPlayer())
-	-- local testWeather = Game.GetWeatherSystem():GetCurrentWeatherType() == 0 and true or false
 
 	if testRain ~= var.settings.rain or testIndoors ~= var.settings.indoors then
 		var.settings.rain = testRain
 		var.settings.indoors = testIndoors
 		DoRainFix()
 	end
-	
-	if not config.ptnextActivated then
+
+	if not config.PTNextActivated then
 		EnablePTNext()
 	end
 end
 
 function DoLazyUpdate()
 	-- runs every timer.LAZY seconds
-	if stats.fps < config.TargetFps then
+
+	-- begin time of day logic:
+	config.SetDaytime(GetGameHour())
+
+	-- begin targetFps logic:
+	if not var.settings.enableTargetFps
+	or var.settings.mode == var.mode.RTOnly then
+		return
+	end
+
+	if stats.fps < var.settings.targetFps then
 		if var.settings.downScale < 7 then
 			var.settings.downScale = var.settings.downScale + 1
 			logger.info("    Auto-adjusting SHaRC to", var.settings.downScale.."x downscale")
@@ -444,7 +476,12 @@ function DoLazyUpdate()
 end
 
 function DoWeatherUpdate()
-	-- runs every timer.WEATHER seconds
+	-- if the weather is stuck, change it
+    local currentWeather = GetCurrentWeather()
+    if currentWeather == config.PreviousWeather then
+        config.BumpWeather(currentWeather)
+    end
+    config.PreviousWeather = currentWeather
 end
 
 --[[ this method crashes CP

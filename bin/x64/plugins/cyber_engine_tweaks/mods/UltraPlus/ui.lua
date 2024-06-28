@@ -125,81 +125,40 @@ local function renderTabEngineDrawer()
 		ui.tooltip("For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics?DLSS will also require a reload.\n\nNOTE: For other PT modes we recommend increasing DLSS/FSR3 and lowering PT\nquality for the best visuals. However for PTNext we recommend the opposite:\nRun PTNext as high as you can and turn upscaling down a step.")
 	end
 
+	local qualityOrder = { "VANILLA", "LOW", "MEDIUM", "HIGH", "INSANE" }
 	ui.space()
 	if ImGui.CollapsingHeader("Quality Level", ImGuiTreeNodeFlags.DefaultOpen) then
-		if ImGui.RadioButton("Vanilla##Quality", var.settings.quality == var.quality.VANILLA) then
-			var.settings.quality = var.quality.VANILLA
-			config.SetQuality(var.settings.quality)
-			SaveSettings()
-		end
-
-		ui.align()
-		if ImGui.RadioButton("Low", var.settings.quality == var.quality.LOW) then
-			var.settings.quality = var.quality.LOW
-			LoadIni("config_low.ini")
-			config.SetQuality(var.settings.quality)
-			SaveSettings()
-		end
-
-		ui.align()
-		if ImGui.RadioButton("Medium", var.settings.quality == var.quality.MEDIUM) then
-			var.settings.quality = var.quality.MEDIUM
-			LoadIni("config_medium.ini")
-			config.SetQuality(var.settings.quality)
-			SaveSettings()
-		end
-
-		ui.align()
-		if ImGui.RadioButton("High", var.settings.quality == var.quality.HIGH) then
-			var.settings.quality = var.quality.HIGH
-			LoadIni("config_high.ini")
-			config.SetQuality(var.settings.quality)
-			SaveSettings()
-		end
-
-		ui.align()
-		if ImGui.RadioButton("Insane", var.settings.quality == var.quality.INSANE) then
-			var.settings.quality = var.quality.INSANE
-			LoadIni("config_insane.ini")
-			config.SetQuality(var.settings.quality)
-			SaveSettings()
+		for _, key in ipairs(qualityOrder) do
+			local qualityLabel = var.quality[key] .. "##Quality"
+			local qualityValue = var.quality[key]
+			if ImGui.RadioButton(qualityLabel, var.settings.quality == qualityValue) then
+				var.settings.quality = qualityValue
+				
+				-- Generate the ini filename dynamically
+				if key ~= "VANILLA" then
+					local iniFilename = "config_" .. string.lower(key) .. ".ini"
+					LoadIni(iniFilename)
+				end
+				
+				config.SetQuality(var.settings.quality)
+				SaveSettings()
+			end
+			ui.align()
 		end
 	end
 
+	local sceneScaleOrder = { "LOW", "VANILLA", "MEDIUM", "HIGH", "INSANE" }
 	ui.space()
 	if ImGui.CollapsingHeader("Scene Scale", ImGuiTreeNodeFlags.DefaultOpen) then
-		if ImGui.RadioButton("Low##SS", var.settings.sceneScale == var.sceneScale.LOW) then
-			var.settings.sceneScale = var.sceneScale.LOW
-			config.SetSceneScale(var.settings.sceneScale)
-			SaveSettings()
-		end
-
-		ui.align()
-		if ImGui.RadioButton("Vanilla##SS", var.settings.sceneScale == var.sceneScale.VANILLA) then
-			var.settings.sceneScale = var.sceneScale.VANILLA
-			config.SetSceneScale(var.settings.sceneScale)
-			SaveSettings()
-		end
-
-		ui.align()
-		if ImGui.RadioButton("Medium##SS", var.settings.sceneScale == var.sceneScale.MEDIUM) then
-			var.settings.sceneScale = var.sceneScale.MEDIUM
-			config.SetSceneScale(var.settings.sceneScale)
-			SaveSettings()
-		end
-
-		ui.align()
-		if ImGui.RadioButton("High##SS", var.settings.sceneScale == var.sceneScale.HIGH) then
-			var.settings.sceneScale = var.sceneScale.HIGH
-			config.SetSceneScale(var.settings.sceneScale)
-			SaveSettings()
-		end
-
-		ui.align()
-		if ImGui.RadioButton("Insane##SS", var.settings.sceneScale == var.sceneScale.INSANE) then
-			var.settings.sceneScale = var.sceneScale.INSANE
-			config.SetSceneScale(var.settings.sceneScale)
-			SaveSettings()
+		for _, key in ipairs(sceneScaleOrder) do
+			local scaleLabel = var.sceneScale[key] .. "##SS"
+			local scaleValue = var.sceneScale[key]
+			if ImGui.RadioButton(scaleLabel, var.settings.sceneScale == scaleValue) then
+				var.settings.sceneScale = scaleValue
+				config.SetSceneScale(var.settings.sceneScale)
+				SaveSettings()
+			end
+			ui.align()
 		end
 	end
 
@@ -238,6 +197,31 @@ local function renderTabEngineDrawer()
 
 				SaveSettings()
 			end
+		end
+	end
+
+	ui.space()
+	var.settings.enableConsole, toggled = ImGui.Checkbox("Console", var.settings.enableConsole)
+	ui.tooltip("Ultra+ will log what it's doing to the CET console")
+	if toggled then
+		SaveSettings()
+	end
+
+	ImGui.SameLine(163)
+	var.settings.enableTargetFps, toggled = ImGui.Checkbox("Enable Target FPS", var.settings.enableTargetFps)
+	ui.tooltip("Ultra+ will use basic perceptual auto-scaling of ray/path\tracing quality to target consistent FPS")
+	if toggled then
+		SaveSettings()
+	end
+
+	if var.settings.enableTargetFps then
+		ImGui.SameLine(250)
+		ui.align()
+		ui.width(130)
+		var.settings.targetFps, toggled = ImGui.InputInt("", var.settings.targetFps, 1)
+
+		if toggled then
+			SaveSettings()
 		end
 	end
 end
@@ -406,8 +390,8 @@ ui.renderUI = function(fps)
 
 	ImGui.SetNextWindowPos(10, 300, ImGuiCond.FirstUseEver)
 
-	config.windowWidth = ImGui.CalcTextSize("000000000000000000000000000000000000000000000000")
-	config.windowHeight = config.windowWidth * 1.1
+	config.windowWidth = ImGui.GetWindowWidth() * 1.37
+	config.windowHeight = config.windowWidth * 1.09
 
 	if config.isDebugTabActive then
 		ImGui.SetNextWindowSize(config.windowWidth, config.windowHeightDebug)

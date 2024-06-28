@@ -53,6 +53,9 @@ local var = {
 		indoors = nil,
 		rain = nil,
 		nrdEnabled = nil,
+		enableTargetFps = false,
+		targetFps = 30,
+		enableConsole = false,
 	},
 }
 
