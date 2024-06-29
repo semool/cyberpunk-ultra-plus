@@ -910,7 +910,7 @@ local options = {
 		},
 		{
 			item = "ForceShadowLODBiasValue",
-			name = "Force RT Shadow LOD Bias",
+			name = "RT Shadow LOD Bias Value",
 			category = "RayTracing",
 			tooltip = "(LOD Bias value can be set below)",
 		},

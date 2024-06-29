@@ -68,61 +68,27 @@ local function renderTabEngineDrawer()
 
 	ui.text("NOTE: Once happy, reload a save to fully activate the mode")
 
+	local renderingModes = {
+		{ key = "RT_ONLY", label = "RT Only", tooltip = "Regular ray tracing, with optimisations and fixes." },
+		{ key = "RT_PT", label = "RT+PT", tooltip = "Normal raytracing plus path traced bounce lighting. Leave Path Tracing\ndisabled in graphics options for this to work correctly." },
+		{ key = "PT20", label = "PT20", tooltip = "Path tracing from Cyberpunk 2.0.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality." },
+		{ key = "PT21", label = "PT21", tooltip = "Path tracing from Cyberpunk 2.10+.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality." },
+		{ key = "PTNEXT", label = "PTNext", tooltip = "For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics/DLSS will also require a reload.\n\nNOTE: For other PT modes we recommend increasing DLSS/FSR3 and lowering PT\nquality for the best visuals. However for PTNext we recommend the opposite:\nRun PTNext as high as you can and turn upscaling down a step." }
+	}
+	ui.space()
 	if ImGui.CollapsingHeader("Rendering Mode", ImGuiTreeNodeFlags.DefaultOpen) then
-		--[[
-		if ImGui.RadioButton( "Raster (no ray tracing or path tracing)", var.settings.mode == var.mode.RASTER ) then
-			var.settings.mode = var.mode.RASTER
-			config.SetMode( var.settings.mode )
+		for _, mode in ipairs(renderingModes) do
+			local modeValue = var.mode[mode.key]
+			if ImGui.RadioButton(mode.label, var.settings.mode == modeValue) then
+				var.settings.mode = modeValue
+				config.SetMode(var.settings.mode)
+				config.SetQuality(var.settings.quality)
+				config.SetSceneScale(var.settings.sceneScale)
+				SaveSettings()
+			end
+			ui.tooltip(mode.tooltip)
+			ui.align()
 		end
-]]
-		if ImGui.RadioButton("RT Only", var.settings.mode == var.mode.RT_ONLY) then
-			var.settings.mode = var.mode.RT_ONLY
-			config.SetMode(var.settings.mode)
-			config.SetQuality(var.settings.quality)
-			config.SetSceneScale(var.settings.sceneScale)
-			SaveSettings()
-		end
-		ui.tooltip("Regular ray tracing, with optimisations and fixes.")
-
-		ui.align()
-		if ImGui.RadioButton("RT+PT", var.settings.mode == var.mode.RT_PT) then
-			var.settings.mode = var.mode.RT_PT
-			config.SetMode(var.settings.mode)
-			config.SetQuality(var.settings.quality)
-			config.SetSceneScale(var.settings.sceneScale)
-			SaveSettings()
-		end
-		ui.tooltip("Normal raytracing plus path traced bounce lighting. Leave Path Tracing\ndisabled in graphics options for this to work correctly.")
-
-		ui.align()
-		if ImGui.RadioButton("PT20", var.settings.mode == var.mode.PT20) then
-			var.settings.mode = var.mode.PT20
-			config.SetMode(var.settings.mode)
-			config.SetQuality(var.settings.quality)
-			config.SetSceneScale(var.settings.sceneScale)
-			SaveSettings()
-		end
-		ui.tooltip("Path tracing from Cyberpunk 2.0.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.")
-
-		ui.align()
-		if ImGui.RadioButton("PT21", var.settings.mode == var.mode.PT21) then
-			var.settings.mode = var.mode.PT21
-			config.SetMode(var.settings.mode)
-			config.SetQuality(var.settings.quality)
-			config.SetSceneScale(var.settings.sceneScale)
-			SaveSettings()
-		end
-		ui.tooltip("Path tracing from Cyberpunk 2.10+.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.")
-
-		ui.align()
-		if ImGui.RadioButton("PTNext", var.settings.mode == var.mode.PTNEXT) then
-			var.settings.mode = var.mode.PTNEXT
-			config.SetMode(var.settings.mode)
-			config.SetQuality(var.settings.quality)
-			config.SetSceneScale(var.settings.sceneScale)
-			SaveSettings()
-		end
-		ui.tooltip("For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics?DLSS will also require a reload.\n\nNOTE: For other PT modes we recommend increasing DLSS/FSR3 and lowering PT\nquality for the best visuals. However for PTNext we recommend the opposite:\nRun PTNext as high as you can and turn upscaling down a step.")
 	end
 
 	local qualityOrder = { "VANILLA", "LOW", "MEDIUM", "HIGH", "INSANE" }
@@ -133,13 +99,12 @@ local function renderTabEngineDrawer()
 			local qualityValue = var.quality[key]
 			if ImGui.RadioButton(qualityLabel, var.settings.quality == qualityValue) then
 				var.settings.quality = qualityValue
-				
-				-- Generate the ini filename dynamically
+
 				if key ~= "VANILLA" then
 					local iniFilename = "config_" .. string.lower(key) .. ".ini"
 					LoadIni(iniFilename)
 				end
-				
+
 				config.SetQuality(var.settings.quality)
 				SaveSettings()
 			end
@@ -147,9 +112,9 @@ local function renderTabEngineDrawer()
 		end
 	end
 
-	local sceneScaleOrder = { "LOW", "VANILLA", "MEDIUM", "HIGH", "INSANE" }
+	local sceneScaleOrder = { "LOW", "VANILLA", "MEDIUM", "HIGH" }
 	ui.space()
-	if ImGui.CollapsingHeader("Scene Scale", ImGuiTreeNodeFlags.DefaultOpen) then
+	if ImGui.CollapsingHeader("Radiance Cache Accuracy", ImGuiTreeNodeFlags.DefaultOpen) then
 		for _, key in ipairs(sceneScaleOrder) do
 			local scaleLabel = var.sceneScale[key] .. "##SS"
 			local scaleValue = var.sceneScale[key]

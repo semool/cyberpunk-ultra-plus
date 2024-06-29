@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '4.7.1',
+	__VERSION	 = '4.7.3',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -339,17 +339,22 @@ function PreparePTNext()
 end
 
 function EnablePTNext()
+	if var.settings.mode ~= var.mode.PTNEXT then
+		return
+	end
+
 	Wait(1.5, function()
 		SetOption("Editor/ReGIR", "UseForDI", true)
---[[
+
 		local usingNRD = GetOption("RayTracing", "EnableNRD")
 		if not usingNRD then
 			logger.info("    (RR is in use)")
+			-- if we can work out why local lights/vegetation need separate denoiser info
+			-- Dogtown we can remove this!! it looks horrible and only needed in Dogtown
 			SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
 		else
 			logger.info("    (NRD is in use)")
 		end
-]]
 	end)
 
 	config.PTNextActivated = true
@@ -385,7 +390,7 @@ function GetGameHour()
 end
 
 function GetCurrentWeather()
-    return Game.GetWeatherSystem():GetCurrentWeather()
+    return Game.GetWeatherSystem():GetWeatherState().name
 end
 
 function BumpWeather()
@@ -397,6 +402,10 @@ end
 
 function DoRefreshEngine()
 	-- hack to force the engine to warm reload
+	if var.settings.mode ~= var.mode.PTNEXT then
+		return
+	end
+
 	logger.info("Refreshing Engine...")
 	SetOption("Editor/ReGIR", "UseForDI", false)
 	Wait(0.5, function()
@@ -461,16 +470,14 @@ function DoLazyUpdate()
 	end
 
 	if stats.fps < var.settings.targetFps then
-		if var.settings.downScale < 7 then
-			var.settings.downScale = var.settings.downScale + 1
-			logger.info("    Auto-adjusting SHaRC to", var.settings.downScale.."x downscale")
-			SetOption("Editor/SHARC", "DownscaleFactor", var.settings.downScale)
+		if var.settings.autoScale > 1 then
+			var.settings.autoScale = var.settings.autoScale - 1
+			config.AutoScale(var.settings.autoScale)
 		end
 	else
-		if var.settings.downScale > 2 then
-			var.settings.downScale = var.settings.downScale - 1
-			logger.info("    Auto-adjusting SHaRC to", var.settings.downScale.."x downscale")
-			SetOption("Editor/SHARC", "DownscaleFactor", var.settings.downScale)
+		if var.settings.autoScale < 6 then
+			var.settings.autoScale = var.settings.autoScale + 1
+			config.AutoScale(var.settings.autoScale)
 		end
 	end
 end

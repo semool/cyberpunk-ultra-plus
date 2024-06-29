@@ -26,11 +26,6 @@ function config.SetSceneScale(scale)
 		SetOption("Editor/SHARC", "SceneScale", "200.0")
 		return
 	end
-
-	if scale == var.sceneScale.INSANE then
-		SetOption("Editor/SHARC", "SceneScale", "400.0")
-		return
-	end
 end
 
 return config

@@ -39,8 +39,6 @@ function config.SetQuality(quality)
 		SetOption("Editor/SHARC", "Bounces", "4")
 		SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
 		SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "2")
-		SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "8")
-		SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "8")
 		return
 	end
 
@@ -60,8 +58,6 @@ function config.SetQuality(quality)
 		SetOption("RayTracing", "CullingDistanceCharacter", "12.0")
 		SetOption("RayTracing", "CullingDistanceVehicle", "35.0")
 		SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "16")
-		SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
-		SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
 		SetOption("Editor/SHARC", "Bounces", "1")
 
 		if var.settings.mode == var.mode.PTNEXT then
@@ -78,8 +74,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
 			SetOption("Editor/SHARC", "DownscaleFactor", "7")
-			SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
-			SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
 			return
 		end
 
@@ -98,6 +94,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
 			SetOption("Editor/SHARC", "DownscaleFactor", "7")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
 			return
 		end
 
@@ -118,6 +116,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
 			SetOption("Editor/SHARC", "DownscaleFactor", "7")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
 			return
 		end
 
@@ -133,6 +133,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "4")
 			SetOption("Editor/SHARC", "DownscaleFactor", "7")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
 			return
 		end
 	end
@@ -153,9 +155,7 @@ function config.SetQuality(quality)
 		SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
 		SetOption("RayTracing", "CullingDistanceVehicle", "40.0")
 		SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "16")
-		SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "3")
-		SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
-		SetOption("Editor/SHARC", "Bounces", "2")
+		SetOption("Editor/SHARC", "Bounces", "1")
 
 		if var.settings.mode == var.mode.PTNEXT then
 			SetOption("RayTracing", "TracingRadius", "200.0")
@@ -170,9 +170,9 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
-			SetOption("Editor/SHARC", "DownscaleFactor", "7")
-			SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
-			SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
+			SetOption("Editor/SHARC", "DownscaleFactor", "7")	
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "3")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
 			return
 		end
 
@@ -191,6 +191,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
 			SetOption("Editor/SHARC", "DownscaleFactor", "7")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
 			return
 		end
 
@@ -211,6 +213,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
 			SetOption("Editor/SHARC", "DownscaleFactor", "7")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
 			return
 		end
 
@@ -226,6 +230,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8")
 			SetOption("Editor/SHARC", "DownscaleFactor", "5")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "3")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
 			return
 		end
 	end
@@ -246,9 +252,7 @@ function config.SetQuality(quality)
 		SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
 		SetOption("RayTracing", "CullingDistanceVehicle", "50.0")
 		SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "20")
-		SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "4")
-		SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "24")
-		SetOption("Editor/SHARC", "Bounces", "2")
+		SetOption("Editor/SHARC", "Bounces", "1")
 
 		if var.settings.mode == var.mode.PTNEXT then
 			SetOption("RayTracing", "TracingRadius", "200.0")
@@ -264,8 +268,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
 			SetOption("Editor/SHARC", "DownscaleFactor", "5")
-			SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
-			SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "4")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "24")
 			return
 		end
 
@@ -284,6 +288,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "2")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
 			SetOption("Editor/SHARC", "DownscaleFactor", "7")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
 			return
 		end
 
@@ -304,6 +310,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "2")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
 			SetOption("Editor/SHARC", "DownscaleFactor", "7")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
 			return
 		end
 
@@ -319,6 +327,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "2")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "16")
 			SetOption("Editor/SHARC", "DownscaleFactor", "3")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "4")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
 			return
 		end
 	end
@@ -329,8 +339,8 @@ function config.SetQuality(quality)
 		-- SetOption("DLSS", "SampleNumber", "32")
 		-- SetOption("FSR2", "SampleNumber", "32")
 		SetOption("Editor/Selection/Appearance", "CheckerboardSize","3")
-		SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "6")
-		SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "6")
+		SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "8")
+		SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "8")
 		SetOption("Editor/ReGIR", "LightSlotsCount", "512")
 		SetOption("Editor/ReGIR", "ShadingCandidatesCount", "24")
 		SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")	  -- WAS 12 above 8 causes lights flickering
@@ -339,9 +349,7 @@ function config.SetQuality(quality)
 		SetOption("RayTracing", "CullingDistanceCharacter", "20.0")
 		SetOption("RayTracing", "CullingDistanceVehicle", "60.0")
 		SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "24")
-		SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "5")
-		SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "24")
-		SetOption("Editor/SHARC", "Bounces", "2")
+		SetOption("Editor/SHARC", "Bounces", "1")
 
 		if var.settings.mode == var.mode.PTNEXT then
 			SetOption("RayTracing", "TracingRadius", "200.0")
@@ -357,8 +365,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
 			SetOption("Editor/SHARC", "DownscaleFactor", "3")
-			SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
-			SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "8")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
 			return
 		end
 
@@ -377,6 +385,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "4")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
 			SetOption("Editor/SHARC", "DownscaleFactor", "3")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
 			return
 		end
 
@@ -397,6 +407,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "4")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
 			SetOption("Editor/SHARC", "DownscaleFactor", "3")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
 			return
 		end
 
@@ -412,6 +424,8 @@ function config.SetQuality(quality)
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "4")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
 			SetOption("Editor/SHARC", "DownscaleFactor", "2")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "5")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "24")
 		end
 	end
 end

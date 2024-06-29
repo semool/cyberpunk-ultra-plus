@@ -5,7 +5,8 @@ local var = require("variables")
 local config = {}
 
 function config.AutoScale(quality)
-	logger.info("Auto-scaling perceptual quality to:", quality)
+	local percentage = math.floor((quality / 6) * 100)
+	logger.info("    (Auto-scaling perceptual quality to", percentage.."% to try and hit FPS target)")
 
 	if quality == 1 then
 		SetOption("Editor/SHARC", "DownscaleFactor", 7)
@@ -17,8 +18,6 @@ function config.AutoScale(quality)
 			SetOption("RayTracing", "TracingRadius", "100.0")
 			LoadIni("config_low.ini")
 		end
-
-		PushChanges()
 		return
 	end
 
@@ -32,8 +31,6 @@ function config.AutoScale(quality)
 			SetOption("RayTracing", "TracingRadius", "100.0")
 			LoadIni("config_low.ini")
 		end
-
-		PushChanges()
 		return
 	end
 
@@ -47,8 +44,6 @@ function config.AutoScale(quality)
 			SetOption("RayTracing", "TracingRadius", "200.0")
 			LoadIni("config_medium.ini")
 		end
-
-		PushChanges()
 		return
 	end
 
@@ -62,8 +57,6 @@ function config.AutoScale(quality)
 			SetOption("RayTracing", "TracingRadius", "300.0")
 			LoadIni("config_medium.ini")
 		end
-
-		PushChanges()
 		return
 	end
 
@@ -77,8 +70,6 @@ function config.AutoScale(quality)
 			SetOption("RayTracing", "TracingRadius", "400.0")
 			LoadIni("config_high.ini")
 		end
-
-		PushChanges()
 		return
 	end
 
@@ -92,8 +83,6 @@ function config.AutoScale(quality)
 			SetOption("RayTracing", "TracingRadius", "1000.0")
 			LoadIni("config_insane.ini")
 		end
-
-		PushChanges()
 		return
 	end
 end

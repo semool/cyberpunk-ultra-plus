@@ -104,14 +104,14 @@ function config.SetMode(mode)
 		SetOption("Editor/ReSTIRGI", "UseTemporalRGS", false)
 		SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "0")
 		SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "0")
-		SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "1")
+		SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "3")
 		SetOption("Editor/ReSTIRGI", "SpatialSamplingRadius", "48.0")				-- WAS 64.0
 		SetOption("Editor/RTXDI", "SpatialSamplingRadius", "20.0")					-- WAS 64.0
 		SetOption("Editor/RTXDI", "EnableGradients", true)
 		SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", false)
 		SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)		-- disabling so SpatialNumSamples not needed
 		SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.45")					-- WAS 0.45
-		SetOption("Editor/RTXDI", "BiasCorrectionMode", "1")
+		SetOption("Editor/RTXDI", "BiasCorrectionMode", "3")
 		SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", true)
 		SetOption("Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.1")
 		SetOption("Editor/SHARC", "Enable", true)
@@ -172,6 +172,7 @@ function config.SetMode(mode)
 		SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "1")
 		SetOption("Editor/ReSTIRGI", "SpatialSamplingRadius", "32.0")
 		SetOption("Editor/RTXDI", "SpatialSamplingRadius", "32.0")
+		SetOption("Editor/RTXDI", "PermutationSamplingMode", "2")
 		SetOption("Editor/RTXDI", "EnableGradients", false)
 		SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", false)
 		SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)
@@ -234,16 +235,17 @@ function config.SetMode(mode)
 		SetOption("Editor/ReSTIRGI", "BoilingFilterStrength", "0.4")
 		SetOption("Editor/ReSTIRGI", "UseSpatialRGS", true)
 		SetOption("Editor/ReSTIRGI", "UseTemporalRGS", true)
-		SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "8")
-		SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "6")
-		SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "1")
+		SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
+		SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
+		SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "3")
 		SetOption("Editor/ReSTIRGI", "SpatialSamplingRadius", "48.0")				-- WAS 64.0
 		SetOption("Editor/RTXDI", "SpatialSamplingRadius", "20.0")					-- WAS 64.0
+		SetOption("Editor/RTXDI", "PermutationSamplingMode", "2")
 		SetOption("Editor/RTXDI", "EnableGradients", true)
 		SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", false)
 		SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)		-- disabling so SpatialNumSamples not needed
 		SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.45")					-- WAS 0.45
-		SetOption("Editor/RTXDI", "BiasCorrectionMode", "1")
+		SetOption("Editor/RTXDI", "BiasCorrectionMode", "3")
 		SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", true)
 		SetOption("Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.1")
 		SetOption("Editor/SHARC", "Enable", true)
@@ -305,11 +307,12 @@ function config.SetMode(mode)
 		SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "0")
 		SetOption("Editor/ReSTIRGI", "SpatialSamplingRadius", "48.0")				-- WAS 64.0
 		SetOption("Editor/RTXDI", "SpatialSamplingRadius", "20.0")					-- WAS 64.0
+		SetOption("Editor/RTXDI", "PermutationSamplingMode", "2")
 		SetOption("Editor/RTXDI", "EnableGradients", true)
 		SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", false)
 		SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)		-- disabling so SpatialNumSamples not needed
 		SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.45")					-- WAS 0.45
-		SetOption("Editor/RTXDI", "BiasCorrectionMode", "1")
+		SetOption("Editor/RTXDI", "BiasCorrectionMode", "3")
 		SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", true)
 		SetOption("Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.1")
 		SetOption("Editor/SHARC", "Enable", true)
@@ -369,9 +372,10 @@ function config.SetMode(mode)
 		SetOption("Editor/ReSTIRGI", "UseTemporalRGS", true)
 		SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
 		SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
-		SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "1")
+		SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "3")
 		SetOption("Editor/ReSTIRGI", "SpatialSamplingRadius", "48.0")				-- WAS 64.0
 		SetOption("Editor/RTXDI", "SpatialSamplingRadius", "20.0")					-- WAS 64.0
+		SetOption("Editor/RTXDI", "PermutationSamplingMode", "0")
 		SetOption("Editor/RTXDI", "EnableGradients", true)
 		SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", false)
 		SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)		-- disabling so SpatialNumSamples not needed
