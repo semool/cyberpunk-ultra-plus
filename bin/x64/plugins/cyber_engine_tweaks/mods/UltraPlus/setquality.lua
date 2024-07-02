@@ -68,14 +68,14 @@ function config.SetQuality(quality)
 			SetOption("RayTracing/Reference", "RayNumberScreenshot", "0")
 			SetOption("RayTracing/Reference", "BounceNumberScreenshot", "0")
 			SetOption("Editor/RTXDI", "EnableFallbackLight", false)
-			SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
+			SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
 			SetOption("Editor/RTXDI", "NumInitialSamples", "0")
 			SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
 			SetOption("Editor/SHARC", "DownscaleFactor", "7")
-			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
-			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
 			return
 		end
 
@@ -149,7 +149,7 @@ function config.SetQuality(quality)
 		SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "5")
 		SetOption("Editor/ReGIR", "LightSlotsCount", "512")				-- TEST
 		SetOption("Editor/ReGIR", "ShadingCandidatesCount", "16")
-		SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")
+		SetOption("Editor/ReGIR", "BuildCandidatesCount", "16")
 		SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", false)
 		SetOption("RayTracing", "TracingRadiusReflections", "1500.0")
 		SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
@@ -165,14 +165,14 @@ function config.SetQuality(quality)
 			SetOption("RayTracing/Reference", "RayNumberScreenshot", "0")
 			SetOption("RayTracing/Reference", "BounceNumberScreenshot", "0")
 			SetOption("Editor/RTXDI", "EnableFallbackLight", false)
-			SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
+			SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
 			SetOption("Editor/RTXDI", "NumInitialSamples", "0")
 			SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
 			SetOption("Editor/SHARC", "DownscaleFactor", "7")	
-			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "3")
-			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
 			return
 		end
 
@@ -246,7 +246,7 @@ function config.SetQuality(quality)
 		SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "6")
 		SetOption("Editor/ReGIR", "LightSlotsCount", "512")
 		SetOption("Editor/ReGIR", "ShadingCandidatesCount", "20")
-		SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")	  -- WAS 10 above 8 causes lights flickering
+		SetOption("Editor/ReGIR", "BuildCandidatesCount", "24")	  -- WAS 10 above 8 causes lights flickering
 		SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", false) -- WAS true
 		SetOption("RayTracing", "TracingRadiusReflections", "1500.0")
 		SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
@@ -262,14 +262,14 @@ function config.SetQuality(quality)
 			SetOption("RayTracing/Reference", "RayNumberScreenshot", "0")
 			SetOption("RayTracing/Reference", "BounceNumberScreenshot", "0")
 			SetOption("Editor/RTXDI", "EnableFallbackLight", false)
-			SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
+			SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
 			SetOption("Editor/RTXDI", "NumInitialSamples", "0")
 			SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
 			SetOption("Editor/SHARC", "DownscaleFactor", "5")
-			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "4")
-			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "24")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
 			return
 		end
 
@@ -343,7 +343,7 @@ function config.SetQuality(quality)
 		SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "8")
 		SetOption("Editor/ReGIR", "LightSlotsCount", "512")
 		SetOption("Editor/ReGIR", "ShadingCandidatesCount", "24")
-		SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")	  -- WAS 12 above 8 causes lights flickering
+		SetOption("Editor/ReGIR", "BuildCandidatesCount", "32")	  -- WAS 12 above 8 causes lights flickering
 		SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", false) -- WAS true
 		SetOption("RayTracing", "TracingRadiusReflections", "8000.0")
 		SetOption("RayTracing", "CullingDistanceCharacter", "20.0")
@@ -359,14 +359,14 @@ function config.SetQuality(quality)
 			SetOption("RayTracing/Reference", "RayNumberScreenshot", "0")
 			SetOption("RayTracing/Reference", "BounceNumberScreenshot", "0")
 			SetOption("Editor/RTXDI", "EnableFallbackLight", false)
-			SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
+			SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
 			SetOption("Editor/RTXDI", "NumInitialSamples", "0")
 			SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
 			SetOption("Editor/SHARC", "DownscaleFactor", "3")
-			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "8")
-			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
 			return
 		end
 

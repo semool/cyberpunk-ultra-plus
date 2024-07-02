@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '4.7.3',
+	__VERSION	 = '4.8.1',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -33,10 +33,19 @@ local config = {
 	SetVram = require("setvram").SetVram,
 	AutoScale = require("perceptualautoscale").AutoScale,
 	SetDaytime = require("daytimetasks").SetDaytime,
-	DEBUG = false,
-	PTNextActivated = false,
-	WindowOpen = false,
 	PreviousWeather = nil,
+	DEBUG = false,
+	ptNext = {
+		active = false,
+		prepped = false,
+	},
+}
+local window = {
+		open = false,
+}
+local gameSession = {
+	active = false,
+	fastTravel = false,
 }
 local stats = {
 	fps = 0,
@@ -51,13 +60,16 @@ local timer = {
 	WEATHER = 910,		  -- 15:10 hours
 }
 
-local Detector = { isGameActive = false }
-function Detector.UpdateGameStatus()
+function UpdatePausedStatus()
 	-- check if in-game or not
 	local player = Game.GetPlayer()
 	local isInMenu = GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():IsPreGame()
 
-	Detector.isGameActive = player and not isInMenu
+	if gameSession.active and not gameSession.fastTravel and player and not isInMenu then
+		timer.paused = false
+	else
+		timer.paused = true
+	end
 end
 
 function Debug(...)
@@ -321,12 +333,16 @@ end
 function PreparePTNext()
 	-- if not in PTNext mode, always disable ReGIR
 	-- otherwise disable PTNext in preparation for loading
+	if config.ptNext.ready or var.settings.mode ~= var.mode.PTNEXT then
+		return
+	end
+
 	if var.settings.mode ~= var.mode.PTNEXT then
 		SetOption("Editor/ReGIR", "UseForDI", false)
 		SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
-		
+
 		logger.info("    PTNext is not in use")
-		config.PTNextActivated = false
+		config.ptNext.active = false
 		return
 	end
 
@@ -334,12 +350,12 @@ function PreparePTNext()
 	SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
 
 	logger.info("    PTNext is ready to load")
-	config.PTNextActivated = false
-	return
+	config.ptNext.ready = true
+	config.ptNext.active = false
 end
 
 function EnablePTNext()
-	if var.settings.mode ~= var.mode.PTNEXT then
+	if config.ptNext.active or var.settings.mode ~= var.mode.PTNEXT then
 		return
 	end
 
@@ -357,7 +373,7 @@ function EnablePTNext()
 		end
 	end)
 
-	config.PTNextActivated = true
+	config.ptNext.active = true
 	logger.info("    PTNext is active")
 end
 
@@ -414,12 +430,11 @@ function DoRefreshEngine()
 	end)
 end
 
-function DoGameSessionStarted()
+function DoGameSessionStart()
 	-- do at game launch or start of loading a savegame
-	if timer.paused then
+	if not timer.paused then
 		logger.info("    [Game started]")
 		logger.info("    (Unpausing background functions)")
-		timer.paused = false
 	end
 
 	config.SetDaytime(GetGameHour())
@@ -427,13 +442,11 @@ function DoGameSessionStarted()
 	PreparePTNext()
 end
 
-function DoGameSessionEnding()
+function DoGameSessionEnd()
 	-- do at game session end or exiting to main menu
 	logger.info("...")
 	logger.info("[Game session ending]")
-	logger.info("    (Pausing background functions)")
-	timer.paused = true
-	config.PTNextActivated = false
+	config.ptNext.active = false
 	stats.fps = 0
 
 	InitUltraPlus()
@@ -441,6 +454,13 @@ end
 
 function DoFastUpdate()
 	-- runs every timer.FAST seconds
+	UpdatePausedStatus()
+	if timer.paused then
+		PreparePTNext()
+		return
+	end
+
+	EnablePTNext()
 	DoRRFix()
 
 	local testRain = Game.GetWeatherSystem():GetRainIntensity() > 0 and true or false
@@ -451,14 +471,13 @@ function DoFastUpdate()
 		var.settings.indoors = testIndoors
 		DoRainFix()
 	end
-
-	if not config.PTNextActivated then
-		EnablePTNext()
-	end
 end
 
 function DoLazyUpdate()
 	-- runs every timer.LAZY seconds
+	if timer.paused then
+		return
+	end
 
 	-- begin time of day logic:
 	config.SetDaytime(GetGameHour())
@@ -483,6 +502,10 @@ function DoLazyUpdate()
 end
 
 function DoWeatherUpdate()
+	if timer.paused then
+		return
+	end
+
 	-- if the weather is stuck, change it
     local currentWeather = GetCurrentWeather()
     if currentWeather == config.PreviousWeather then
@@ -511,12 +534,6 @@ end
 
 registerForEvent('onUpdate', function(delta)
 	-- handle non-blocking background tasks
-	Detector.UpdateGameStatus()
-
-	if timer.paused or not Detector.isGameActive then
-		return
-	end
-
 	timer.fast = timer.fast + delta
 	timer.lazy = timer.lazy + delta
 	timer.weather = timer.weather + delta
@@ -577,13 +594,32 @@ registerForEvent("onInit", function()
 		logger.info("Enabling debug output")
 	end
 
-	ObserveAfter('QuestTrackerGameController', 'OnInitialize', function()
-		logger.info("[Entered game]")
-		DoGameSessionStarted()
+	Observe('QuestTrackerGameController', 'OnUninitialize', function()
+		config.ptNext.active = false
+		config.ptNext.ready = false
+		gameSession.active = false
 	end)
 
-	Observe('QuestTrackerGameController', 'OnUninitialize', function()
-		DoGameSessionEnding()
+	ObserveAfter('QuestTrackerGameController', 'OnInitialize', function()
+		gameSession.active = true
+	end)
+
+	Observe('FastTravelSystem', 'OnUpdateFastTravelPointRecordRequest', function()
+		config.ptNext.active = false
+		config.ptNext.ready = false
+		gameSession.fastTravel = true
+	end)
+
+	Observe('FastTravelSystem', 'OnPerformFastTravelRequest', function()
+		config.ptNext.active = false
+		config.ptNext.ready = false
+		gameSession.fastTravel = true
+	end)
+
+	Observe('FastTravelSystem', 'OnLoadingScreenFinished', function(_, finished)
+		if finished then
+			gameSession.fastTravel = false
+		end
 	end)
 
 	Observe("CCTVCamera", "TakeControl", function(this, val)
@@ -598,17 +634,25 @@ registerForEvent("onInit", function()
 end)
 
 registerForEvent("onOverlayOpen", function()
-	config.WindowOpen = true
+	window.open = true
 end)
 
 registerForEvent("onOverlayClose", function()
-	config.WindowOpen = false
+	window.open = false
+end)
+
+registerForEvent("onShutdown", function()
+	UnObserve('QuestTrackerGameController', 'OnUninitialize')
+	UnObserve('QuestTrackerGameController', 'OnInitialize')
+	UnObserve('FastTravelSystem', 'OnUpdateFastTravelPointRecordRequest')
+	UnObserve('FastTravelSystem', 'OnPerformFastTravelRequest')
+	UnObserve('FastTravelSystem', 'OnLoadingScreenFinished')
 end)
 
 registerForEvent("onDraw", function()
-	if not config.WindowOpen then
+	if not window.open then
 		return
 	end
 
-	ui.renderUI(stats.fps)
+	ui.renderUI(stats.fps, window.open)
 end)
