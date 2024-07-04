@@ -10,8 +10,8 @@ function config.SetQuality(quality)
 	if quality == var.quality.VANILLA then
 		LoadIni("config_vanilla_quality.ini")
 
-		-- SetOption("DLSS", "SampleNumber", "16")
-		-- SetOption("FSR2", "SampleNumber", "16")
+		SetOption("DLSS", "SampleNumber", "16")
+		SetOption("FSR2", "SampleNumber", "16")
 		SetOption("Editor/Selection/Appearance", "CheckerboardSize","2")
 		SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "5")
 		SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "5")
@@ -45,14 +45,14 @@ function config.SetQuality(quality)
 	if quality == var.quality.LOW then
 		LoadIni("config_low.ini")
 
-		-- SetOption("DLSS", "SampleNumber", "16")
-		-- SetOption("FSR2", "SampleNumber", "16")
+		SetOption("DLSS", "SampleNumber", "24")
+		SetOption("FSR2", "SampleNumber", "24")
 		SetOption("Editor/Selection/Appearance", "CheckerboardSize","3")				-- TEST
 		SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "4")
 		SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "4")
-		SetOption("Editor/ReGIR", "LightSlotsCount", "512")				-- TEST
+		SetOption("Editor/ReGIR", "LightSlotsCount", "512")
 		SetOption("Editor/ReGIR", "ShadingCandidatesCount", "8")
-		SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")
+		SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")		-- above 8 causes flickering lights after menus
 		SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", false)
 		SetOption("RayTracing", "TracingRadiusReflections", "800.0")
 		SetOption("RayTracing", "CullingDistanceCharacter", "12.0")
@@ -142,14 +142,14 @@ function config.SetQuality(quality)
 	if quality == var.quality.MEDIUM then
 		LoadIni("config_medium.ini")
 
-		-- SetOption("DLSS", "SampleNumber", "24")
-		-- SetOption("FSR2", "SampleNumber", "24")
+		SetOption("DLSS", "SampleNumber", "32")
+		SetOption("FSR2", "SampleNumber", "32")
 		SetOption("Editor/Selection/Appearance", "CheckerboardSize","2")
 		SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "5")
 		SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "5")
-		SetOption("Editor/ReGIR", "LightSlotsCount", "512")				-- TEST
+		SetOption("Editor/ReGIR", "LightSlotsCount", "512")
 		SetOption("Editor/ReGIR", "ShadingCandidatesCount", "16")
-		SetOption("Editor/ReGIR", "BuildCandidatesCount", "16")
+		SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")		-- above 8 causes flickering lights after menus
 		SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", false)
 		SetOption("RayTracing", "TracingRadiusReflections", "1500.0")
 		SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
@@ -239,15 +239,15 @@ function config.SetQuality(quality)
 	if quality == var.quality.HIGH then
 		LoadIni("config_high.ini")
 
-		-- SetOption("DLSS", "SampleNumber", "32")
-		-- SetOption("FSR2", "SampleNumber", "32")
+		SetOption("DLSS", "SampleNumber", "48")
+		SetOption("FSR2", "SampleNumber", "48")
 		SetOption("Editor/Selection/Appearance", "CheckerboardSize","2")
 		SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "6")
 		SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "6")
 		SetOption("Editor/ReGIR", "LightSlotsCount", "512")
 		SetOption("Editor/ReGIR", "ShadingCandidatesCount", "20")
-		SetOption("Editor/ReGIR", "BuildCandidatesCount", "24")	  -- WAS 10 above 8 causes lights flickering
-		SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", false) -- WAS true
+		SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")		-- above 8 causes flickering lights after menus
+		SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", false)
 		SetOption("RayTracing", "TracingRadiusReflections", "1500.0")
 		SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
 		SetOption("RayTracing", "CullingDistanceVehicle", "50.0")
@@ -336,15 +336,15 @@ function config.SetQuality(quality)
 	if quality == var.quality.INSANE then
 		LoadIni("config_insane.ini")
 
-		-- SetOption("DLSS", "SampleNumber", "32")
-		-- SetOption("FSR2", "SampleNumber", "32")
+		SetOption("DLSS", "SampleNumber", "64")
+		SetOption("FSR2", "SampleNumber", "64")
 		SetOption("Editor/Selection/Appearance", "CheckerboardSize","3")
 		SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "8")
 		SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "8")
 		SetOption("Editor/ReGIR", "LightSlotsCount", "512")
 		SetOption("Editor/ReGIR", "ShadingCandidatesCount", "24")
-		SetOption("Editor/ReGIR", "BuildCandidatesCount", "32")	  -- WAS 12 above 8 causes lights flickering
-		SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", false) -- WAS true
+		SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")		-- above 8 causes flickering lights after menus
+		SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", false)
 		SetOption("RayTracing", "TracingRadiusReflections", "8000.0")
 		SetOption("RayTracing", "CullingDistanceCharacter", "20.0")
 		SetOption("RayTracing", "CullingDistanceVehicle", "60.0")

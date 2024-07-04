@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '4.8.1',
+	__VERSION	 = '4.8.2',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -45,6 +45,8 @@ local window = {
 }
 local gameSession = {
 	active = false,
+	time = nil,
+	lastTime = nil,
 	fastTravel = false,
 }
 local stats = {
@@ -56,20 +58,23 @@ local timer = {
 	weather = 0,
 	paused = false,
 	FAST = 1.0,
-	LAZY = 10.0,
+	LAZY = 5.0,
 	WEATHER = 910,		  -- 15:10 hours
 }
 
-function UpdatePausedStatus()
-	-- check if in-game or not
-	local player = Game.GetPlayer()
-	local isInMenu = GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():IsPreGame()
+function IsGameSessionActive()
+	-- check if the game is active or not
+	local time = Game.GetPlaythroughTime():ToFloat()
 
-	if gameSession.active and not gameSession.fastTravel and player and not isInMenu then
+	if time ~= gameSession.lastTime and gameSession.active and not gameSession.fastTravel then
 		timer.paused = false
-	else
+	elseif time == gameSession.lastTime or not gameSession.active or gameSession.fastTravel then
+		config.ptNext.active = false
+		config.ptNext.ready = false
 		timer.paused = true
 	end
+
+	gameSession.lastTime = time
 end
 
 function Debug(...)
@@ -379,14 +384,13 @@ end
 
 function DoRainFix()
 	-- enable particle PT integration unless player is outdoors AND it's raining
-	if var.settings.indoors or not var.settings.rain then
-		logger.info("    (It's not raining: Enabling separate particle colour)")
+	if var.settings.rain and not var.settings.indoors then
+		logger.info("    (It's raining: Enabling separate particle colour)")
 		SetOption("Rendering", "DLSSDSeparateParticleColor", true)
-		return
+	else
+		logger.info("    (It's not raining: Disabling separate particle colour)")
+		SetOption("Rendering", "DLSSDSeparateParticleColor", false)
 	end
-
-	logger.info("    (It's raining: Disabling separate particle colour)")
-	SetOption("Rendering", "DLSSDSeparateParticleColor", false)
 end
 
 function DoRRFix()
@@ -402,18 +406,18 @@ function DoRRFix()
 end
 
 function GetGameHour()
-    return Game.GetTimeSystem():GetGameTime():Hours()
+	return Game.GetTimeSystem():GetGameTime():Hours()
 end
 
 function GetCurrentWeather()
-    return Game.GetWeatherSystem():GetWeatherState().name
+	return Game.GetWeatherSystem():GetWeatherState().name
 end
 
 function BumpWeather()
-    local weatherTypes = {"clear", "cloudy", "rain", "fog"}
-    local randomWeather = weatherTypes[math.random(#weatherTypes)]
-    Game.GetWeatherSystem():RequestNewWeather(randomWeather)
-    logger.info("Changed weather to:", randomWeather)
+	local weatherTypes = {"clear", "cloudy", "rain", "fog"}
+	local randomWeather = weatherTypes[math.random(#weatherTypes)]
+	Game.GetWeatherSystem():RequestNewWeather(randomWeather)
+	logger.info("Changed weather to:", randomWeather)
 end
 
 function DoRefreshEngine()
@@ -430,31 +434,10 @@ function DoRefreshEngine()
 	end)
 end
 
-function DoGameSessionStart()
-	-- do at game launch or start of loading a savegame
-	if not timer.paused then
-		logger.info("    [Game started]")
-		logger.info("    (Unpausing background functions)")
-	end
-
-	config.SetDaytime(GetGameHour())
-
-	PreparePTNext()
-end
-
-function DoGameSessionEnd()
-	-- do at game session end or exiting to main menu
-	logger.info("...")
-	logger.info("[Game session ending]")
-	config.ptNext.active = false
-	stats.fps = 0
-
-	InitUltraPlus()
-end
-
 function DoFastUpdate()
 	-- runs every timer.FAST seconds
-	UpdatePausedStatus()
+	IsGameSessionActive()
+
 	if timer.paused then
 		PreparePTNext()
 		return
@@ -507,11 +490,11 @@ function DoWeatherUpdate()
 	end
 
 	-- if the weather is stuck, change it
-    local currentWeather = GetCurrentWeather()
-    if currentWeather == config.PreviousWeather then
-        config.BumpWeather(currentWeather)
-    end
-    config.PreviousWeather = currentWeather
+	local currentWeather = GetCurrentWeather()
+	if currentWeather == config.PreviousWeather then
+		config.BumpWeather(currentWeather)
+	end
+	config.PreviousWeather = currentWeather
 end
 
 --[[ this method crashes CP
@@ -595,8 +578,6 @@ registerForEvent("onInit", function()
 	end
 
 	Observe('QuestTrackerGameController', 'OnUninitialize', function()
-		config.ptNext.active = false
-		config.ptNext.ready = false
 		gameSession.active = false
 	end)
 
@@ -605,14 +586,10 @@ registerForEvent("onInit", function()
 	end)
 
 	Observe('FastTravelSystem', 'OnUpdateFastTravelPointRecordRequest', function()
-		config.ptNext.active = false
-		config.ptNext.ready = false
 		gameSession.fastTravel = true
 	end)
 
 	Observe('FastTravelSystem', 'OnPerformFastTravelRequest', function()
-		config.ptNext.active = false
-		config.ptNext.ready = false
 		gameSession.fastTravel = true
 	end)
 
