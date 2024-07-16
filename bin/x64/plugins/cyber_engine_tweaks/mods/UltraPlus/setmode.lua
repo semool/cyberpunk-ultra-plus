@@ -18,7 +18,49 @@ function config.SetMode(mode)
 		return
 	end
 
-	if mode == var.mode.RT_ONLY then
+	if mode == var.mode.RASTER then
+		LoadIni("config_rt.ini")
+
+		SetOption("/graphics/raytracing", "RayTracedPathTracing", false)
+		SetOption("/graphics/raytracing", "RayTracing", false)
+		SetOption("Editor/ReGIR", "Enable", false)
+		PushChanges()
+
+		SetOption("Developer/FeatureToggles", "RTXDI", false)
+		SetOption("Rendering", "AllowRTXDIRejitter", false)
+		SetOption("RayTracing", "AmbientOcclusionRayNumber", "1")
+		SetOption("RayTracing", "SunAngularSize", "0.25")
+		SetOption("RayTracing", "SkyRadianceScale", "1.0")						  -- fake RT sunlight on buildings
+		SetOption("RayTracing", "EnableShadowCascades", false)						-- test with RT
+		SetOption("RayTracing", "EnableGlobalShadow", true)
+		SetOption("RayTracing", "EnableLocalShadow", true)
+		SetOption("RayTracing", "EnableTransparentReflection", true)
+		SetOption("RayTracing", "EnableDiffuseIllumination", true)
+		SetOption("RayTracing", "EnableAmbientOcclusion", true)
+		SetOption("RayTracing", "EnableReflection", true)
+		SetOption("RayTracing", "EnableShadowOptimizations", true)
+		-- SetOption("RayTracing", "EnableGlobalIllumination", false)
+		SetOption("RayTracing", "EnableImportanceSampling", true)
+		SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
+		SetOption("RayTracing/Debug", "EnableVisibilityCheck", false)				-- TEST
+		SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "200.0")
+		SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "100.0")
+		SetOption("RayTracing/Reflection", "EnableHalfResolutionTracing", "1")
+		SetOption("RayTracing/Reflection", "AdaptiveSampling", true)
+		SetOption("RayTracing/Diffuse", "EnableHalfResolutionTracing", "0")
+		SetOption("RayTracing/Diffuse", "AdaptiveSampling", true)
+		SetOption("Rendering/VariableRateShading", "Enable", true)
+		SetOption("Rendering/VariableRateShading", "VarianceCutoff", "0.025")
+		SetOption("Rendering/VariableRateShading", "MotionFactor", "0.75")
+		SetOption("Rendering/VariableRateShading", "ScreenEdgeFactor", "1.0")
+		SetOption("Editor/Characters/Eyes", "DiffuseBoost", "0.35")
+		SetOption("Editor/RTXDI", "EnableRTXDIDenoising", false)
+		SetOption("Editor/SHARC", "Enable", false)
+		SaveSettings()
+		return
+	end
+
+	if mode == var.mode.RT then
 		LoadIni("config_rt.ini")
 
 		SetOption("/graphics/raytracing", "RayTracedPathTracing", false)
@@ -72,7 +114,7 @@ function config.SetMode(mode)
 		SetOption("Developer/FeatureToggles", "ScreenSpaceReflection", false)
 		SetOption("Developer/FeatureToggles", "ScreenSpacePlanarReflection", false)
 		SetOption("Developer/FeatureToggles", "PathTracingForPhotoMode", false)
-		SetOption("Rendering", "AllowRTXDIRejitter", true) 
+		SetOption("Rendering", "AllowRTXDIRejitter", false) 
 		SetOption("RayTracing", "EnableNRD", true)
 		SetOption("RayTracing", "AmbientOcclusionRayNumber", "1")
 		SetOption("RayTracing", "SunAngularSize", "0.25")
@@ -208,7 +250,7 @@ function config.SetMode(mode)
 		SetOption("Developer/FeatureToggles", "ScreenSpaceReflection", false)
 		SetOption("Developer/FeatureToggles", "ScreenSpacePlanarReflection", false)
 		SetOption("Developer/FeatureToggles", "PathTracingForPhotoMode", true)
-		SetOption("Rendering", "AllowRTXDIRejitter", true) 
+		SetOption("Rendering", "AllowRTXDIRejitter", false) 
 		SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
 		SetOption("RayTracing", "SunAngularSize", "0.25")
 		SetOption("RayTracing", "SkyRadianceScale", "0.7")						  -- fake PT sunlight on buildings
@@ -279,7 +321,7 @@ function config.SetMode(mode)
 		SetOption("Developer/FeatureToggles", "ScreenSpaceReflection", false)
 		SetOption("Developer/FeatureToggles", "ScreenSpacePlanarReflection", false)
 		SetOption("Developer/FeatureToggles", "PathTracingForPhotoMode", true)
-		SetOption("Rendering", "AllowRTXDIRejitter", true) 
+		SetOption("Rendering", "AllowRTXDIRejitter", false) 
 		SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
 		SetOption("RayTracing", "SunAngularSize", "0.25")
 		SetOption("RayTracing", "SkyRadianceScale", "0.7")						  -- fake PT sunlight on buildings

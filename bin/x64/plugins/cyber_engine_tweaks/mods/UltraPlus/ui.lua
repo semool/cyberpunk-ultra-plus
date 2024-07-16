@@ -72,7 +72,7 @@ local function renderTabEngineDrawer()
 	ui.text("NOTE: Once happy, reload a save to fully activate the mode")
 
 	local renderingModes = {
-		{ key = "RT_ONLY", label = "RT Only", tooltip = "Regular ray tracing, with optimisations and fixes." },
+		{ key = "RT", label = "RT", tooltip = "Regular ray tracing, with optimisations and fixes." },
 		{ key = "RT_PT", label = "RT+PT", tooltip = "Normal raytracing plus path traced bounce lighting. Leave Path Tracing\ndisabled in graphics options for this to work correctly." },
 		{ key = "PT20", label = "PT20", tooltip = "Path tracing from Cyberpunk 2.0.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality." },
 		{ key = "PT21", label = "PT21", tooltip = "Path tracing from Cyberpunk 2.10+.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality." },
@@ -117,6 +117,12 @@ local function renderTabEngineDrawer()
 
 	local sceneScaleOrder = { "PERFORMANCE", "VANILLA", "BALANCED", "QUALITY" }
 	ui.space()
+
+	local disableRadianceCache = var.settings.mode == var.mode.RASTER or var.settings.mode == var.mode.RT or var.settings.mode == var.mode.RT_PT
+	if disableRadianceCache then
+		ImGui.BeginDisabled(true)
+	end
+
 	if ImGui.CollapsingHeader("Radiance Cache Accuracy", ImGuiTreeNodeFlags.DefaultOpen) then
 		for _, key in ipairs(sceneScaleOrder) do
 			local scaleLabel = var.sceneScale[key] .. "##SS"
@@ -128,6 +134,10 @@ local function renderTabEngineDrawer()
 			end
 			ui.align()
 		end
+	end
+
+	if disableRadianceCache then
+		ImGui.EndDisabled()
 	end
 
 	ui.space()

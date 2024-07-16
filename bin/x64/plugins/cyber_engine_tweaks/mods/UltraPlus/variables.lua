@@ -7,8 +7,8 @@ local var = {
 		PT21 = "PT21",
 		PTNEXT = "PTNext",
 		RT_PT = "RTPT",
-		RT_ONLY = "RTOnly",
-		RASTER = "Raster",
+		RT= "RT",
+		RASTER = "No RT",
 	},
 	quality = {
 		VANILLA = "Vanilla",
