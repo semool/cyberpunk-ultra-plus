@@ -322,7 +322,7 @@ function config.SetMode(mode)
 		LoadIni("config_pt.ini")
 
 		-- leave SHaRC enabled but set to fastest, performance hack
-		var.settings.scenescale = var.sceneScale.PERFORMANCE
+		var.settings.sceneScale = var.sceneScale.PERFORMANCE
 
 		SetOption("/graphics/raytracing", "RayTracing", true)
 		SetOption("/graphics/raytracing", "RayTracedPathTracing", true)
