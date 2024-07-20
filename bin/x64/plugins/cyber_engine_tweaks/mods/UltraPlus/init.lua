@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '4.9.6',
+	__VERSION	 = '5.0.0-rc1',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -24,7 +24,7 @@ UltraPlus = {
 local logger = require("logger")
 local options = require("options")
 local var = require("variables")
-local ui = require("ui")
+local render = require("render")
 local config = {
 	SetMode = require("setmode").SetMode,
 	SetQuality = require("setquality").SetQuality,
@@ -61,6 +61,14 @@ local timer = {
 	LAZY = 5.0,
 	WEATHER = 910,		  -- 15:10 hours
 }
+
+function toboolean(str)
+    local bool_map = {
+        ["true"] = true,
+        ["false"] = false,
+    }
+    return bool_map[str:lower()]
+end
 
 function IsGameSessionActive()
 	-- check if the game is active or not
@@ -137,13 +145,13 @@ function GetOption(category, item)
 		return tonumber(value)
 	end
 
-	logger.info("ERROR: Getting value for:", category, item..". Result returned:", value)
+	logger.info("ERROR: Error getting value for:", category .. "/" .. item, "=", value)
 end
 
 function SetOption(category, item, value, valueType)
 	-- sets a live game setting, working out which method to use for different setting types
 	if value == nil then
-		logger.info("ERROR: Skipping nil value:", category .. "/" .. item)
+		logger.info("ERROR: Skipping nil value:", category .. "/" .. item, "=", value)
 		return
 	end
 
@@ -152,18 +160,18 @@ function SetOption(category, item, value, valueType)
 		return
 	end
 
-	if string.sub(category, 1, 1) == "/" then
-		Game.GetSettingsSystem():GetVar(category, item):SetValue(value)
+	if string.sub(category, 1, 1) == "/" and tostring(value) == "true" or tostring(value) == "false" then
+		-- Game.GetSettingsSystem():GetVar(category, item):SetValue(toboolean(value)) -- broken, discussing with psiberx
 		return
 	end
-	
-	if type(value) == "boolean" then
-		GameOptions.SetBool(category, item, value)
+
+	if string.sub(category, 1, 1) == "/" and tostring(value):match("^%-?%d+$") then
+		Game.GetSettingsSystem():GetVar(category, item):SetIndex(tonumber(value))
 		return
 	end
-	
+
 	if tostring(value) == "false" or tostring(value) == "true" then
-		GameOptions.SetBool(category, item, tostring(value) == "true")
+		GameOptions.SetBool(category, item, toboolean(value))
 		return
 	end
 
@@ -177,7 +185,7 @@ function SetOption(category, item, value, valueType)
 		return
 	end
 
-	logger.info("ERROR: Unsupported GameOption:", category .. "/" .. item, "=", value)
+		logger.info("ERROR: Couldn't set value for:", category .. "/" .. item, "=", value)
 end
 
 function LoadIni(path)
@@ -288,6 +296,7 @@ function SaveSettings()
 	UltraPlus["internal.quality"] = var.settings.quality
 	UltraPlus["internal.sceneScale"] = var.settings.sceneScale
 	UltraPlus["internal.vram"] = var.settings.vram
+	UltraPlus["internal.graphics"] = var.settings.graphics
 	UltraPlus["internal.nsgddCompatible"] = var.settings.nsgddCompatible
 	UltraPlus["internal.enableTargetFps"] = var.settings.enableTargetFps
 	UltraPlus["internal.targetFps"] = var.settings.targetFps
@@ -628,5 +637,5 @@ registerForEvent("onDraw", function()
 		return
 	end
 
-	ui.renderUI(stats.fps, window.open)
+	render.renderUI(stats.fps, window.open)
 end)

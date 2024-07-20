@@ -8,8 +8,6 @@ function config.SetQuality(quality)
 	logger.info("Configuring", var.settings.mode, "quality for", quality)
 
 	if quality == var.quality.VANILLA then
-		LoadIni("config_vanilla_quality.ini")
-
 		SetOption("DLSS", "SampleNumber", "16")
 		SetOption("FSR2", "SampleNumber", "16")
 		SetOption("Editor/Selection/Appearance", "CheckerboardSize","2")
@@ -43,8 +41,6 @@ function config.SetQuality(quality)
 	end
 
 	if quality == var.quality.FAST then
-		LoadIni("config_fast.ini")
-
 		SetOption("DLSS", "SampleNumber", "24")
 		SetOption("FSR2", "SampleNumber", "24")
 		SetOption("Editor/Selection/Appearance", "CheckerboardSize","3")				-- TEST
@@ -162,8 +158,6 @@ function config.SetQuality(quality)
 	end
 
 	if quality == var.quality.MEDIUM then
-		LoadIni("config_medium.ini")
-
 		SetOption("DLSS", "SampleNumber", "32")
 		SetOption("FSR2", "SampleNumber", "32")
 		SetOption("Editor/Selection/Appearance", "CheckerboardSize","2")
@@ -281,8 +275,6 @@ function config.SetQuality(quality)
 	end
 
 	if quality == var.quality.HIGH then
-		LoadIni("config_high.ini")
-
 		SetOption("DLSS", "SampleNumber", "48")
 		SetOption("FSR2", "SampleNumber", "48")
 		SetOption("Editor/Selection/Appearance", "CheckerboardSize","2")
@@ -400,10 +392,8 @@ function config.SetQuality(quality)
 	end
 
 	if quality == var.quality.INSANE then
-		LoadIni("config_insane.ini")
-
-		SetOption("DLSS", "SampleNumber", "64")
-		SetOption("FSR2", "SampleNumber", "64")
+		SetOption("DLSS", "SampleNumber", "48")
+		SetOption("FSR2", "SampleNumber", "48")
 		SetOption("Editor/Selection/Appearance", "CheckerboardSize","3")
 		SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "8")
 		SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "8")

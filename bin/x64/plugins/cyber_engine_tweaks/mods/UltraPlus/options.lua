@@ -36,7 +36,7 @@ local options = {
 		},
 		{
 			item = "EnableLocalLightImportanceSampling",
-			name = "Enable PT Local Light Importance Sampling",
+			name = "Enable Path Tracing Local Light Importance Sampling",
 			category = "Editor/RTXDI",
 			tooltip = "Sample local lights to the environment PDF. In theory more accurate",
 		},
@@ -83,12 +83,6 @@ local options = {
 			tooltip = "Makes buildings and mountains fade into the atmosphere (CP Default: On)",
 		},
 		{
-			item = "GlobalIllumination",
-			name = "Enable Global Illumination",
-			category = "Developer/FeatureToggles",
-			tooltip = "",
-		},
-		{
 			item = "DistantGI",
 			name = "Enable Distant Global Illumination",
 			category = "Developer/FeatureToggles",
@@ -105,12 +99,6 @@ local options = {
 			name = "Enable Distant Shadows",
 			category = "Developer/FeatureToggles",
 			tooltip = "(CP Default: On)",
-		},
-		{
-			item = "DistantShadowsForceFoliageGeometry",
-			name = "Force Distant Foliage Shadows",
-			category = "Rendering/Shadows",
-			tooltip = "(CP Default: Off)",
 		},
 		{
 			item = "HideFPPAvatar",
@@ -160,6 +148,12 @@ local options = {
 			item = "UpdateUseBatching",
 			name = "Dynamic Instance Update Batching",
 			category = "RayTracing/DynamicInstance",
+			tooltip = "",
+		},
+		{
+			item = "GlobalIllumination",
+			name = "Enable Global Illumination",
+			category = "Developer/FeatureToggles",
 			tooltip = "",
 		},
 		{
@@ -248,9 +242,15 @@ local options = {
 		},
 		{
 			item = "ForceAllShadows",
-			name = "Force All Shadows",
+			name = "Force All Shadows in Path Tracing",
 			category = "Editor/RTXDI",
 			tooltip = "Forces shadows from meshes not in the PT world space to be traced",
+		},
+		{
+			item = "DistantShadowsForceFoliageGeometry",
+			name = "Force Distant Foliage Shadows",
+			category = "Rendering/Shadows",
+			tooltip = "(CP Default: Off)",
 		},
 		{
 			item = "ForceShadowLODBiasUsage",
@@ -480,7 +480,7 @@ local options = {
 		},
 		{
 			item = "EnableReferenceCaptureParameters",
-			name = "Enable NRD Reference Capture Parameters",
+			name = "Enable PT16 Reference Capture Parameters",
 			category = "Editor/Denoising/NRD",
 			tooltip = "Allow Reference  Denoising for testing/comparison",
 		},

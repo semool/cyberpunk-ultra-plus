@@ -9,7 +9,7 @@ local var = {
 		PTNEXT = "PTNext",
 		RT_PT = "RTPT",
 		RT= "RT",
-		RASTER = "No RT",
+		RASTER = "Raster",
 	},
 	quality = {
 		VANILLA = "Vanilla",
@@ -28,6 +28,12 @@ local var = {
 		GB20 = 20,
 		GB24 = 24,
 	},
+	graphics = {
+		POTATO = "Potato",
+		FAST = "Fast",
+		MEDIUM = "Medium",
+		HIGH = "High",
+	},
 	sceneScale = {
 		PERFORMANCE = "Performance",
 		VANILLA = "Vanilla",
@@ -41,6 +47,7 @@ local var = {
 		sceneScale = 1,
 		autoScale = 3,
 		vram = "Unknown",
+		graphics = "Unknown",
 		nsgddCompatible = nil,
 		indoors = nil,
 		rain = nil,
