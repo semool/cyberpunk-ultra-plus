@@ -56,6 +56,7 @@ function config.SetMode(mode)
 		SetOption("Editor/RTXDI", "EnableRTXDIDenoising", false)
 		SetOption("Editor/SHARC", "Enable", false)
 		SaveSettings()
+		LoadIni("myownsettings.ini")
 		return
 	end
 
@@ -97,6 +98,7 @@ function config.SetMode(mode)
 		SetOption("Editor/RTXDI", "EnableRTXDIDenoising", false)
 		SetOption("Editor/SHARC", "Enable", false)
 		SaveSettings()
+		LoadIni("myownsettings.ini")
 		return
 	end
 
@@ -169,6 +171,7 @@ function config.SetMode(mode)
 		SetOption("Editor/Characters/Eyes", "DiffuseBoost", "0.15")
 		SetOption("Editor/PathTracing", "UseScreenSpaceData", true)
 		SaveSettings()
+		LoadIni("myownsettings.ini")
 		return
 	end
 
@@ -239,6 +242,7 @@ function config.SetMode(mode)
 		SetOption("Editor/Characters/Eyes", "DiffuseBoost", "0.1")
 		SetOption("Editor/PathTracing", "UseScreenSpaceData", false)
 		SaveSettings()
+		LoadIni("myownsettings.ini")
 		return
 	end
 
@@ -314,6 +318,7 @@ function config.SetMode(mode)
 		SetOption("Editor/Characters/Eyes", "DiffuseBoost", "0.4")
 		SetOption("Editor/PathTracing", "UseScreenSpaceData", true)
 		SaveSettings()
+		LoadIni("myownsettings.ini")
 	end
 
 	if mode == var.mode.PT20 then
@@ -385,6 +390,7 @@ function config.SetMode(mode)
 		SetOption("Editor/Characters/Eyes", "DiffuseBoost", "0.4")
 		SetOption("Editor/PathTracing", "UseScreenSpaceData", true)
 		SaveSettings()
+		LoadIni("myownsettings.ini")
 	end
 
 	if mode == var.mode.PT21 then
@@ -458,6 +464,7 @@ function config.SetMode(mode)
 		SetOption("Editor/Characters/Eyes", "DiffuseBoost", "0.4")
 		SetOption("Editor/PathTracing", "UseScreenSpaceData", true)
 		SaveSettings()
+		LoadIni("myownsettings.ini")
 		return
 	end
 
@@ -532,6 +539,7 @@ function config.SetMode(mode)
 		SetOption("Editor/Characters/Eyes", "DiffuseBoost", "0.1")
 		SetOption("Editor/PathTracing", "UseScreenSpaceData", false)
 		SaveSettings()
+		LoadIni("myownsettings.ini")
 		return
 	end
 end

@@ -273,6 +273,7 @@ local function renderTabEngineDrawer()
 				logger.info("Configuring in-game graphics for", var.settings.graphics)
 				local iniFilename = "config_graphics_" .. string.lower(key) .. ".ini"
 				LoadIni(iniFilename)
+				LoadIni("myownsettings.ini")
 
 				SaveSettings()
 				PushChanges()
