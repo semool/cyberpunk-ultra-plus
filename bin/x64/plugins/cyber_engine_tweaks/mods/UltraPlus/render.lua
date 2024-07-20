@@ -1,6 +1,6 @@
 ﻿-- render.lua
 
-local logger = require("logger")
+local logger = require("helpers/logger")
 local options = require("options")
 local var = require("variables")
 local color = require("color")
@@ -229,12 +229,6 @@ local function renderTabEngineDrawer()
 			local qualityValue = var.quality[key]
 			if ui.radio(qualityLabel, var.settings.quality == qualityValue) then
 				var.settings.quality = qualityValue
-
-				if key ~= "VANILLA" then
-					local iniFilename = "config_" .. string.lower(key) .. ".ini"
-					LoadIni(iniFilename)
-				end
-
 				config.SetQuality(var.settings.quality)
 				SaveSettings()
 			end
