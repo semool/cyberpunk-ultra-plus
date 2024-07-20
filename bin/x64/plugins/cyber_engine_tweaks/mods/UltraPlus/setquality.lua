@@ -1,6 +1,6 @@
 -- setquality.lua
 
-local logger = require("logger")
+local logger = require("helpers/logger")
 local var = require("variables")
 local config = {}
 

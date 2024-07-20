@@ -290,14 +290,13 @@ local function renderTabEngineDrawer()
 	ui.space()
 	if ui.header("VRAM Configuration (GB)") then
 		local vramSorted = {}
-		for key, value in pairs(var.vram) do
+		for _, value in pairs(var.vram) do
 			table.insert(vramSorted, value)
 		end
-
 		table.sort(vramSorted)
 
 		for _, v in ipairs(vramSorted) do
-			if ui.radio(tostring(v), var.settings.vram == v) then
+			if ui.radio(tostring(v) .. "##GB", var.settings.vram == v) then
 				var.settings.vram = v
 				config.SetVram(var.settings.vram)
 				SaveSettings()
@@ -368,7 +367,7 @@ end
 local function renderDebugSettings(setting, inputType, width)
 	setting.value = GetOption(setting.category, setting.item)
 	ui.width(width or 0)
-	
+
 	if inputType == "Checkbox" then
 		setting.value, toggled = ui.checkbox(setting.name, setting.value)
 	elseif inputType == "InputInt" then
@@ -376,7 +375,7 @@ local function renderDebugSettings(setting, inputType, width)
 	elseif inputType == "InputFloat" then
 		setting.value, toggled = ui.inputFloat(setting.name, tonumber(setting.value))
 	end
-	
+
 	ui.tooltip(setting.tooltip)
 
 	if toggled then

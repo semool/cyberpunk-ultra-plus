@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.0.0-rc1',
+	__VERSION	 = '5.0.0-rc2',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -21,7 +21,8 @@ UltraPlus = {
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   ]]
 }
-local logger = require("logger")
+local logger = require("helpers/logger")
+local bumpweather = require("helpers/bumpweather")
 local options = require("options")
 local var = require("variables")
 local render = require("render")
@@ -32,7 +33,7 @@ local config = {
 	SetDLSS = require("setdlss").SetDLSS,
 	SetVram = require("setvram").SetVram,
 	AutoScale = require("perceptualautoscale").AutoScale,
-	SetDaytime = require("daytimetasks").SetDaytime,
+	SetDaytime = require("helpers/daytimetasks").SetDaytime,
 	PreviousWeather = nil,
 	DEBUG = false,
 	ptNext = {
@@ -62,12 +63,14 @@ local timer = {
 	WEATHER = 910,		  -- 15:10 hours
 }
 
-function toboolean(str)
-    local bool_map = {
-        ["true"] = true,
-        ["false"] = false,
-    }
-    return bool_map[str:lower()]
+function toboolean(value)
+	if value == "true" or value == true then
+		return true
+	elseif value == "false" or value == false then
+		return false
+	else
+		return nil
+	end
 end
 
 function IsGameSessionActive()
@@ -160,7 +163,7 @@ function SetOption(category, item, value, valueType)
 		return
 	end
 
-	if string.sub(category, 1, 1) == "/" and tostring(value) == "true" or tostring(value) == "false" then
+	if string.sub(category, 1, 1) == "/" and (tostring(value) == "true" or tostring(value) == "false") then
 		-- Game.GetSettingsSystem():GetVar(category, item):SetValue(toboolean(value)) -- broken, discussing with psiberx
 		return
 	end
@@ -170,7 +173,7 @@ function SetOption(category, item, value, valueType)
 		return
 	end
 
-	if tostring(value) == "false" or tostring(value) == "true" then
+	if type(value) == "boolean" or tostring(value) == "false" or tostring(value) == "true" then
 		GameOptions.SetBool(category, item, toboolean(value))
 		return
 	end
@@ -185,7 +188,7 @@ function SetOption(category, item, value, valueType)
 		return
 	end
 
-		logger.info("ERROR: Couldn't set value for:", category .. "/" .. item, "=", value)
+	logger.info("ERROR: Couldn't set value for:", category .. "/" .. item, "=", value)
 end
 
 function LoadIni(path)
@@ -193,13 +196,13 @@ function LoadIni(path)
 	local iniData = {}
 	local category
 
-	local file = io.open(path, "r")
+	local file = io.open("config/" .. path, "r")
 	if not file then
-		logger.info("Failed to open file:", path)
+		logger.info("Failed to open file:", "config/" .. path)
 		return
 	end
 
-	logger.info("	(Loading", path..")")
+	logger.info("	(Loading", "config/" .. path..")")
 	for line in file:lines() do
 		line = line:match("^%s*(.-)%s*$") -- trim whitespace
 

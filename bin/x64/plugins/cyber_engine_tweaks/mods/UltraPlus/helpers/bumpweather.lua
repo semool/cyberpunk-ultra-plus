@@ -1,6 +1,6 @@
 -- bumpweather.lua
 
-local logger = require("logger")
+local logger = require("helpers/logger")
 local config = {
 	WeatherStates = {
 		[1] = '24h_weather_sunny',
@@ -28,7 +28,7 @@ local config = {
 	},
 }
 
-function config.BumpWeather(currentWeather)
+function BumpWeather(currentWeather)
     local weatherIndex
     local randomWeather
 
@@ -43,4 +43,4 @@ function config.BumpWeather(currentWeather)
     logger.info(string.format("Changed weather to: %s (%s)", friendlyName, randomWeather))
 end
 
-return config
+return BumpWeather
