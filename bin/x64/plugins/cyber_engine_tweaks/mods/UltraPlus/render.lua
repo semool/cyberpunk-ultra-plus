@@ -56,10 +56,10 @@ local function renderMainTab()
 		end
 	end
 
-	local sceneScaleOrder = { 'PERFORMANCE', 'VANILLA', 'BALANCED', 'QUALITY' }
+	local sceneScaleOrder = { 'FAST', 'VANILLA', 'MEDIUM', 'HIGH', 'INSANE' }
 	ui.space()
 
-	local disableRadianceCache = var.settings.mode == var.mode.RASTER or var.settings.mode == var.mode.RT or var.settings.mode == var.mode.RT_PT -- or var.settings.mode == var.mode.PT16 -- also test RT+PT
+	local disableRadianceCache = var.settings.mode == var.mode.RASTER or var.settings.mode == var.mode.RT or var.settings.mode == var.mode.RT_PT or var.settings.mode == var.mode.PT16 -- also test RT+PT
 	if disableRadianceCache then
 		ImGui.BeginDisabled(true)
 	end
@@ -141,7 +141,7 @@ local function renderMainTab()
 		SaveSettings()
 	end
 
-	ui.sameLine(136)
+	ui.sameLine(174)
 	var.settings.enableTargetFps, toggled = ui.checkbox('Enable Target FPS', var.settings.enableTargetFps)
 	ui.tooltip('Ultra+ will use basic perceptual auto-scaling of ray/path\tracing quality to target consistent FPS')
 	if toggled then
@@ -195,9 +195,7 @@ local function renderFeaturesTab()
 		local settings, heading, inputType = table.unpack(group)
 		ui.header(heading)
 		for _, setting in pairs(settings) do
-			if var.window.filterText == '' or string.find(string.lower(setting.name), string.lower(var.window.filterText)) then
 				renderSetting(setting, inputType)
-			end
 		end
 	end
 end
@@ -254,7 +252,7 @@ local function renderFps()
 	end
 
 	local fpsText = string.format('Real FPS: %.0f', stats.fps) -- lazy makeshift round function
-	ui.sameLine(296)
+	ui.sameLine(340)
 	ui.text(fpsText)
 end
 

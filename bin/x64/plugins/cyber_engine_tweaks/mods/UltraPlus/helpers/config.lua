@@ -15,7 +15,8 @@ local config = {
 	PreviousWeather = nil,
 	ptNext = {
 		active = false,
-		primed = false,
+		stage1 = false,
+		stage2 = false,
 	},
 }
 

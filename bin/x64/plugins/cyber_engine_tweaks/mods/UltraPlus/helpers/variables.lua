@@ -3,7 +3,6 @@
 local var = {
 	ultraPlusActive = false,
 	confirmationRequired = false,
-	gameMenuChanged = false,
 	window = {
 		open = false,
 		scale = 1.0,
@@ -91,10 +90,11 @@ local var = {
 		[10] = 'Cloudy Morning',
 	},
 	sceneScale = {
-		PERFORMANCE = 'Performance',
+		FAST = 'Fast',
 		VANILLA = 'Vanilla',
-		BALANCED = 'Balanced',
-		QUALITY = 'Quality',
+		MEDIUM = 'Medium',
+		HIGH = 'High',
+		INSANE = 'Insane',
 	},
 }
 

@@ -67,7 +67,9 @@ ui.window = function(title, flags, func)
 
 		local screenWidth = select(1, GetDisplayResolution())
 		if screenWidth > 1000 then
-			if screenWidth > 3000 then
+			if screenWidth > 3800 then
+				var.window.scale = (screenWidth / 1880) * theme.textScale
+			elseif screenWidth > 3000 then
 				var.window.scale = (screenWidth / 1932) * theme.textScale
 			elseif screenWidth > 2000 then
 				var.window.scale = (screenWidth / 1880) * theme.textScale
