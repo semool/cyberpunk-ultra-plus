@@ -58,7 +58,7 @@ ui.window = function(title, flags, func)
 	ImGui.PushStyleColor(ImGuiCol.ScrollbarGrabActive, theme.color.mediumer)
 
 	ImGui.SetNextWindowPos(10, 500, ImGuiCond.FirstUseEver)
-	ImGui.SetNextWindowSize(432 * var.window.scale, 575 * var.window.scale)
+	ImGui.SetNextWindowSize(327 * var.window.scale, 465 * var.window.scale)
 
 	if ImGui.Begin(title, true, flags) then
 		ImGui.SetWindowFontScale(theme.textScale)
