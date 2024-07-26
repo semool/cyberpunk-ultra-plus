@@ -1,6 +1,7 @@
-﻿-- color.lua
+﻿-- theme.lua
 
-local color = {
+local theme = {
+	color = {
 	bg = 0xee180808,
 	text = 0xffffeeee,
 	darker = 0xaa443333,
@@ -8,6 +9,9 @@ local color = {
 	medium = 0xcc665555,
 	mediumer = 0xcc887777,
 	light = 0xccddcccc,
+	},
+
+	textScale = 0.88,
 }
 
-return color
+return theme
