@@ -101,9 +101,6 @@ function config.SetMode(mode)
 	if mode == var.mode.RT_PT then
 		LoadIni('rtpt')
 
-		-- leave SHaRC enabled but set to fastest; performance hack
-		var.settings.sceneScale = var.sceneScale.FAST
-
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', false)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
@@ -245,7 +242,7 @@ function config.SetMode(mode)
 		LoadIni('pt')
 
 		-- leave SHaRC enabled but set to fastest; performance hack
-		var.settings.sceneScale = var.sceneScale.FAST
+		var.settings.sceneScale = var.sceneScale.PERFORMANCE
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
@@ -386,7 +383,7 @@ function config.SetMode(mode)
 
 	if mode == var.mode.PT21 then
 		LoadIni('pt')
-
+		
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)

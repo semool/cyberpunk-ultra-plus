@@ -60,7 +60,6 @@ Cyberpunk = {
 	end,
 
 	Save = function()
-		-- can only be run with CET overlay closed or CTD
 		GetSingleton('inkMenuScenario'):GetSystemRequestsHandler():RequestSaveUserSettings()
 	end,
 
@@ -99,13 +98,7 @@ Cyberpunk = {
 		end
 
 		if string.sub(category, 1, 1) == '/' then -- graphics options
-			local value = Cyberpunk.GetValue(category, item)
-
-			if tostring(value) == 'true' or tostring(value) == 'false' then
-				return value
-			else
-				return Cyberpunk.GetIndex(category, item)
-			end
+			return Cyberpunk.GetValue(category, item) -- will not work for indices
 		end
 
 		return Cyberpunk.Get(category, item)
@@ -123,23 +116,25 @@ Cyberpunk = {
 			return
 		end
 
-		if string.sub(category, 1, 1) == '/' then -- graphics options
-			if tostring(value) == 'true' or tostring(value) == 'false' then
-				if Cyberpunk.GetOption(category, item) ~= value then
-					Cyberpunk.SetValue(category, item, value)
-					var.confirmationRequired = true
-				end
-				return
-			elseif tostring(value):match('^%-?%d+$') then -- integer (index) values
-				if Cyberpunk.GetIndex(category, item) ~= tonumber(value) then
-					Cyberpunk.SetIndex(category, item, tonumber(value))
-					var.confirmationRequired = true
-				end
-				return
-			end
+		if string.sub(category, 1, 1) == '/' and (tostring(value) == 'true' or tostring(value) == 'false') then
+			-- if Cyberpunk.GetOption(category, item) ~= value then -- probably slower to query than to just set
+				Cyberpunk.SetValue(category, item, value)
+				var.gameMenuChanged = true
+				logger.debug('ConfirmChanges() required')
+			-- end
+			return
 		end
 
-		if tostring(value) == 'false' or tostring(value) == 'true' then -- test without type test
+		if string.sub(category, 1, 1) == '/' and tostring(value):match('^%-?%d+$') then
+			-- if Cyberpunk.GetIndex(category, item) ~= value then -- probably slower to query than to just set
+				Cyberpunk.SetIndex(category, item, tonumber(value))
+				var.gameMenuChanged = true
+				logger.debug('ConfirmChanges() required')
+			-- end
+			return
+		end
+
+		if type(value) == 'boolean' or tostring(value) == 'false' or tostring(value) == 'true' then -- test without type test
 			if Cyberpunk.GetOption(category, item) ~= value then
 				Cyberpunk.SetBool(category, item, value)
 			end
@@ -181,10 +176,6 @@ Cyberpunk = {
 
 	IsRaining = function()
 		return Game.GetWeatherSystem():GetRainIntensity() > 0 and true or false
-	end,
-
-	GetPlayTime = function()
-		return Game.GetPlaythroughTime():ToFloat()
 	end,
 }
 
