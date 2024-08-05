@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.1.2',
+	__VERSION	 = '5.2.0-beta02',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -60,13 +60,14 @@ local function isGameSessionActive()
 	local photoModeActive = blackboardPM:GetBool(blackboardDefs.PhotoMode.IsActive)
 	local tutorialActive = Game.GetTimeSystem():IsTimeDilationActive('UI_TutorialPopup')
 
-	if time ~= gameSession.lastTime and gameSession.active
-	and not gameSession.fastTravel
+	if time ~= config.gameSession.lastTime
+	and config.gameSession.active
+	and not config.gameSession.fastTravel
 	and not menuActive
 	and not photoModeActive
 	and not tutorialActive
 	and not Cyberpunk.IsPreGame()
-	and not gameSession.isInMenu then
+	and not config.gameSession.isInMenu then
 		timer.paused = false
 	else
 		config.ptNext.active = false
@@ -74,7 +75,7 @@ local function isGameSessionActive()
 		timer.paused = true
 	end
 
-	gameSession.lastTime = time
+	config.gameSession.lastTime = time
 end
 
 local activeTimers = {}
@@ -84,21 +85,24 @@ function Wait(seconds, callback)
 end
 
 local function saveUserSettingsJson()
+--[[
 	-- instructs game to save settings to UserSettings.json
 	if timer.paused then
 		return
 	end
 
-	Cyberpunk.Save()
 	var.confirmationRequired = false
 	logger.info('Cyberpunk successfully saved UserSettings.json')
+]]
 end
 
 local function confirmChanges()
 	-- confirm graphics menu changes to Cyberpunk
+--[[
 	if var.ultraPlusActive and Cyberpunk.NeedsConfirmation() then
 		Cyberpunk.Confirm()
 	end
+]]
 end
 
 function LoadIni(config)
@@ -200,6 +204,7 @@ function LoadSettings()
 		{ category = '/graphics/presets', item = 'DLSS' },
 		{ category = '/graphics/presets', item = 'FSR2' },
 		{ category = '/graphics/presets', item = 'XESS' },
+		{ category = '/graphics/performance', item = 'CrowdDensity' },
 		{ category = '/graphics/basic', item = 'DepthOfField' },
 		{ category = '/graphics/basic', item = 'LensFlares' },
 		{ category = '/graphics/basic', item = 'ChromaticAberration' },
@@ -350,6 +355,7 @@ local function saveGraphicsSettings()
 		{ category = '/graphics/presets', item = 'DLSS' },
 		{ category = '/graphics/presets', item = 'FSR2' },
 		{ category = '/graphics/presets', item = 'XESS' },
+		{ category = '/graphics/performance', item = 'CrowdDensity' },
 		{ category = '/graphics/basic', item = 'DepthOfField' },
 		{ category = '/graphics/basic', item = 'LensFlares' },
 		{ category = '/graphics/basic', item = 'ChromaticAberration' },
@@ -403,8 +409,8 @@ end
 local function doWindowClose()
 	-- run tasks just after CET window is closed. delay needed to avoid CTDs
 	saveGraphicsSettings()
-
-	if not var.ultraPlusActive or timer.paused or gameSession.isInMenu then
+--[[
+	if not var.ultraPlusActive or timer.paused or config.gameSession.isInMenu then
 		return
 	end
 
@@ -421,6 +427,7 @@ local function doWindowClose()
 			Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', true)
 		end)
 	end
+]]
 end
 
 local function setStatus()
@@ -497,10 +504,10 @@ local function doWeatherUpdate()
 
 	-- if the weather is stuck, change it
 	local currentWeather = Cyberpunk.GetWeather()
-	if currentWeather == config.PreviousWeather then
+	if currentWeather == config.gameSession.previousWeather then
 		config.BumpWeather(currentWeather)
 	end
-	config.PreviousWeather = currentWeather
+	config.gameSession.previousWeather = currentWeather
 end
 
 registerForEvent('onUpdate', function(delta)
@@ -562,29 +569,29 @@ end)
 registerForEvent('onInit', function()
 
 	Observe('QuestTrackerGameController', 'OnUninitialize', function()
-		gameSession.active = false
+		config.gameSession.active = false
 	end)
 
 	ObserveAfter('QuestTrackerGameController', 'OnInitialize', function()
-		gameSession.active = true
+		config.gameSession.active = true
 	end)
 
 	Observe('FastTravelSystem', 'OnUpdateFastTravelPointRecordRequest', function()
-		gameSession.fastTravel = true
+		config.gameSession.fastTravel = true
 	end)
 
 	Observe('FastTravelSystem', 'OnPerformFastTravelRequest', function()
-		gameSession.fastTravel = true
+		config.gameSession.fastTravel = true
 	end)
 
 	Observe('FastTravelSystem', 'OnLoadingScreenFinished', function(_, finished)
 		if finished then
-			gameSession.fastTravel = false
+			config.gameSession.fastTravel = false
 		end
 	end)
 
 	Observe('gameuiPopupsManager', 'OnMenuUpdate', function(_, isInMenu)
-		gameSession.isInMenu = isInMenu
+		config.gameSession.isInMenu = isInMenu
 	end)
 
 	Observe('CCTVCamera', 'TakeControl', function(this, val)

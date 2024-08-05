@@ -12,11 +12,17 @@ local config = {
 	SetDaytime = require('helpers/daytimetasks').SetDaytime,
 	SaveMenu = require('savemenu').SaveMenu,
 	BumpWeather = require('bumpweather').BumpWeather,
-	PreviousWeather = nil,
 	ptNext = {
 		active = false,
 		stage1 = false,
 		stage2 = false,
+	},
+	gameSession = {
+		active = false,
+		isInMenu = false,
+		fastTravel = false,
+		lastTime = 0,
+		previousWeather = nil,
 	},
 }
 

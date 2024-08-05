@@ -127,13 +127,17 @@ Cyberpunk = {
 			if tostring(value) == 'true' or tostring(value) == 'false' then
 				if Cyberpunk.GetOption(category, item) ~= value then
 					Cyberpunk.SetValue(category, item, value)
-					var.confirmationRequired = true
+					if not config.gameSession.isInMenu then
+						var.confirmationRequired = true
+					end
 				end
 				return
 			elseif tostring(value):match('^%-?%d+$') then -- integer (index) values
 				if Cyberpunk.GetIndex(category, item) ~= tonumber(value) then
 					Cyberpunk.SetIndex(category, item, tonumber(value))
-					var.confirmationRequired = true
+					if not config.gameSession.isInMenu then
+						var.confirmationRequired = true
+					end
 				end
 				return
 			end
