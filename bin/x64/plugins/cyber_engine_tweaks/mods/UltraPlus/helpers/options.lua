@@ -50,13 +50,13 @@ local options = {
 		},
 		{
 			item = 'DistantFog',
-			name = 'Enable Distant Raster Fog',
+			name = 'Enable Distant (Raster) Fog',
 			category = 'Developer/FeatureToggles',
 			tooltip = 'Makes buildings and mountains fade into the atmosphere (CP Default: On)',
 		},
 		{
 			item = 'DistantGI',
-			name = 'Enable Distant Global Illumination',
+			name = 'Enable Distant (Raster) Global Illumination',
 			category = 'Developer/FeatureToggles',
 			tooltip = '(CP Default: On)',
 		},
@@ -68,7 +68,7 @@ local options = {
 		},
 		{
 			item = 'DistantShadows',
-			name = 'Enable Distant Shadows',
+			name = 'Enable Distant (Raster) Shadows',
 			category = 'Developer/FeatureToggles',
 			tooltip = '(CP Default: On)',
 		},

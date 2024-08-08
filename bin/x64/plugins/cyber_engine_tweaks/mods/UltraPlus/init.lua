@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.2.0-beta02',
+	__VERSION	 = '5.2.0-rc3',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -26,8 +26,8 @@ local logger = require('helpers/logger')
 local var = require('helpers/variables')
 local config = require('helpers/config')
 local options = require('helpers/options')
-local render = require('render')
 local Cyberpunk = require('helpers/Cyberpunk')
+local render = require('render')
 local gameSession = {
 	active = false,
 	time = nil,
@@ -277,8 +277,8 @@ local function toggleRayReconstruction(state)
 end
 
 local function preparePTNext()
-	-- if not in PTNext mode, always disable ReGIR
-	-- otherwise disable PTNext in preparation for loading
+	-- if not in PTNext mode, disable ReGIR
+	-- if in PTNext mode, disable PTNext in preparation for loading
 	if config.ptNext.stage2 then
 		return
 	end
@@ -301,22 +301,14 @@ local function preparePTNext()
 end
 
 local function enablePTNext()
-	if config.ptNext.active or var.settings.mode ~= var.mode.PTNEXT then
+	if config.ptNext.active
+	or var.settings.mode ~= var.mode.PTNEXT then
 		return
 	end
 
 	Wait(1.5, function()
+		Cyberpunk.SetOption('Editor/RTXDI', 'EnableSeparateDenoising', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', true)
-
-		local usingNRD = Cyberpunk.GetOption('RayTracing', 'EnableNRD')
-		if not usingNRD then
-			logger.info('    (RR is in use)')
-			-- if we can work out why local lights/vegetation need separate denoiser info
-			-- Dogtown we can remove this!! it looks horrible and only needed in Dogtown
-			Cyberpunk.SetOption('Editor/RTXDI', 'EnableSeparateDenoising', true)
-		else
-			logger.info('    (NRD is in use)')
-		end
 	end)
 
 	config.ptNext.active = true
