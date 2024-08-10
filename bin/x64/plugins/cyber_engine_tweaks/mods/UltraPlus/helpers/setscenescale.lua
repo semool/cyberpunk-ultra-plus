@@ -28,7 +28,7 @@ function config.SetSceneScale(scale)
 		return
 	end
 
-	if scale == var.sceneScale.INSANE then
+	if scale == var.sceneScale.EXTREME then
 		Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '400.0')
 		return
 	end

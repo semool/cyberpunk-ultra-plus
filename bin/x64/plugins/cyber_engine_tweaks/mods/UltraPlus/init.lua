@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.2.0-rc3',
+	__VERSION	 = '5.2.1',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -28,13 +28,6 @@ local config = require('helpers/config')
 local options = require('helpers/options')
 local Cyberpunk = require('helpers/Cyberpunk')
 local render = require('render')
-local gameSession = {
-	active = false,
-	time = nil,
-	lastTime = nil,
-	fastTravel = false,
-	isInMenu = false,
-}
 local stats = {
 	fps = 0,
 }
@@ -56,18 +49,18 @@ local function isGameSessionActive()
 	local blackboardUI = Game.GetBlackboardSystem():Get(blackboardDefs.UI_System)
 	local blackboardPM = Game.GetBlackboardSystem():Get(blackboardDefs.PhotoMode)
 
-	local menuActive = blackboardUI:GetBool(blackboardDefs.UI_System.IsInMenu)
-	local photoModeActive = blackboardPM:GetBool(blackboardDefs.PhotoMode.IsActive)
-	local tutorialActive = Game.GetTimeSystem():IsTimeDilationActive('UI_TutorialPopup')
+	config.gameSession.gameMenuActive = blackboardUI:GetBool(blackboardDefs.UI_System.IsInMenu)
+	config.gameSession.photoModeActive = blackboardPM:GetBool(blackboardDefs.PhotoMode.IsActive)
+	config.gameSession.tutorialActive = Game.GetTimeSystem():IsTimeDilationActive('UI_TutorialPopup')
 
 	if time ~= config.gameSession.lastTime
-	and config.gameSession.active
-	and not config.gameSession.fastTravel
-	and not menuActive
-	and not photoModeActive
-	and not tutorialActive
-	and not Cyberpunk.IsPreGame()
-	and not config.gameSession.isInMenu then
+	and config.gameSession.gameSessionActive
+	and not config.gameSession.fastTravelActive
+	and not config.gameSession.gameMenuActive
+	and not config.gameSession.photoModeActive
+	and not config.gameSession.tutorialActive
+	and not config.gameSession.gameMenuActive
+	and not Cyberpunk.IsPreGame() then
 		timer.paused = false
 	else
 		config.ptNext.active = false
@@ -85,7 +78,6 @@ function Wait(seconds, callback)
 end
 
 local function saveUserSettingsJson()
---[[
 	-- instructs game to save settings to UserSettings.json
 	if timer.paused then
 		return
@@ -93,16 +85,13 @@ local function saveUserSettingsJson()
 
 	var.confirmationRequired = false
 	logger.info('Cyberpunk successfully saved UserSettings.json')
-]]
 end
 
 local function confirmChanges()
 	-- confirm graphics menu changes to Cyberpunk
---[[
 	if var.ultraPlusActive and Cyberpunk.NeedsConfirmation() then
 		Cyberpunk.Confirm()
 	end
-]]
 end
 
 function LoadIni(config)
@@ -301,13 +290,17 @@ local function preparePTNext()
 end
 
 local function enablePTNext()
-	if config.ptNext.active
-	or var.settings.mode ~= var.mode.PTNEXT then
+	if config.ptNext.active or var.settings.mode ~= var.mode.PTNEXT then
 		return
 	end
 
-	Wait(1.5, function()
+	Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
+
+	Wait(0.8, function()
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableSeparateDenoising', true)
+	end)
+
+	Wait(1.5, function()
 		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', true)
 	end)
 
@@ -402,7 +395,7 @@ local function doWindowClose()
 	-- run tasks just after CET window is closed. delay needed to avoid CTDs
 	saveGraphicsSettings()
 --[[
-	if not var.ultraPlusActive or timer.paused or config.gameSession.isInMenu then
+	if not var.ultraPlusActive or timer.paused or config.gameSession.gameMenuActive then
 		return
 	end
 
@@ -425,8 +418,6 @@ end
 local function setStatus()
 	if var.settings.mode == var.mode.PTNEXT and not config.ptNext.active then
 		config.status = 'Reload a save to activate PTNext'
-	elseif var.confirmationRequired then
-		config.status = 'Close CET overlay to finish applying settings'
 	elseif config.ptNext.primed then
 		config.status = 'PTNext is ready to load'
 	else
@@ -437,11 +428,25 @@ end
 local function doFastUpdate()
 	-- runs every timer.FAST seconds
 	isGameSessionActive()
-	confirmChanges()
+	-- confirmChanges()
 	setStatus()
 
 	if var.settings.mode == var.mode.PTNEXT and not config.ptNext.active and not config.ptNext.stage1 then
 		preparePTNext()
+	end
+
+	if not Cyberpunk.GetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode') then goto continue
+		config.NRD = Cyberpunk.GetOption('Raytracing', 'EnableNRD')
+		config.DLSSD = Cyberpunk.GetOption('/graphics/presets', 'DLSS_D')
+
+		if Cyberpunk.PhotoMode() then
+			Cyberpunk.SetOption('/graphics/presets', 'DLSS_D', false)
+			Cyberpunk.SetOption('Raytracing', 'EnableNRD', false)
+		else
+			Cyberpunk.SetOption('Raytracing', 'EnableNRD', config.NRD)
+			Cyberpunk.SetOption('/graphics/presets', 'DLSS_D', config.DLSSD)
+		end
+		::continue::
 	end
 
 	if timer.paused then
@@ -560,30 +565,26 @@ end)
 
 registerForEvent('onInit', function()
 
-	Observe('QuestTrackerGameController', 'OnUninitialize', function()
-		config.gameSession.active = false
-	end)
-
 	ObserveAfter('QuestTrackerGameController', 'OnInitialize', function()
-		config.gameSession.active = true
+		config.gameSession.gameSessionActive = true
 	end)
 
 	Observe('FastTravelSystem', 'OnUpdateFastTravelPointRecordRequest', function()
-		config.gameSession.fastTravel = true
+		config.gameSession.fastTravelAcctive = true
 	end)
 
 	Observe('FastTravelSystem', 'OnPerformFastTravelRequest', function()
-		config.gameSession.fastTravel = true
+		config.gameSession.fastTravelAcctive = true
 	end)
 
 	Observe('FastTravelSystem', 'OnLoadingScreenFinished', function(_, finished)
 		if finished then
-			config.gameSession.fastTravel = false
+			config.gameSession.fastTravelActive = false
 		end
 	end)
 
 	Observe('gameuiPopupsManager', 'OnMenuUpdate', function(_, isInMenu)
-		config.gameSession.isInMenu = isInMenu
+		config.gameSession.gameMenuActive = isInMenu
 	end)
 
 	Observe('CCTVCamera', 'TakeControl', function(this, val)

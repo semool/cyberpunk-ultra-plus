@@ -94,7 +94,7 @@ local var = {
 		VANILLA = 'Vanilla',
 		MEDIUM = 'Medium',
 		HIGH = 'High',
-		INSANE = 'Insane',
+		EXTREME = 'Extreme',
 	},
 	SunAngularSizes = {
 		[0] = '0.35',

@@ -56,7 +56,7 @@ local function renderMainTab()
 		end
 	end
 
-	local sceneScaleOrder = { 'FAST', 'VANILLA', 'MEDIUM', 'HIGH', 'INSANE' }
+	local sceneScaleOrder = { 'FAST', 'VANILLA', 'MEDIUM', 'HIGH', 'EXTREME' }
 	ui.space()
 
 	local disableRadianceCache = var.settings.mode == var.mode.RASTER or var.settings.mode == var.mode.RT or var.settings.mode == var.mode.RT_PT or var.settings.mode == var.mode.PT16 -- also test RT+PT
