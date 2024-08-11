@@ -1,6 +1,6 @@
--- helpers/variables.lua
+-- helpers/Variables.lua
 
-local var = {
+Var = {
 	ultraPlusActive = false,
 	confirmationRequired = false,
 	window = {
@@ -124,4 +124,4 @@ local var = {
 	},
 }
 
-return var
+return Var

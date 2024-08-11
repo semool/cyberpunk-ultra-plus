@@ -1,37 +1,37 @@
 -- setdlss.lua
 
-local logger = require('helpers/logger')
-local var = require('helpers/variables')
-local Cyberpunk = require('helpers/Cyberpunk')
-local config = {}
+Logger = require('helpers/Logger')
+Var = require('helpers/Variables')
+Config = {}
+Cyberpunk = require('helpers/Cyberpunk')
 
-function config.SetDLSS(quality)
-	logger.info('Setting DLSS to', quality)
+function Config.SetDLSS(quality)
+	Logger.info('Setting DLSS to', quality)
 
-	if quality == var.dlss.DLAA then
+	if quality == Var.dlss.DLAA then
 		Cyberpunk.SetOption('/graphics/presets', 'DLSS', 'DLAA')
 		return
 	end
 
-	if quality == var.dlss.QUALITY then
+	if quality == Var.dlss.QUALITY then
 		Cyberpunk.SetOption('/graphics/presets', 'DLSS', 'Quality')
 		return
 	end
 
-	if quality == var.dlss.BALANCED then
+	if quality == Var.dlss.BALANCED then
 		Cyberpunk.SetOption('/graphics/presets', 'DLSS', 'Balanced')
 		return
 	end
 
-	if quality == var.dlss.PERFORMANCE then
+	if quality == Var.dlss.PERFORMANCE then
 		Cyberpunk.SetOption('/graphics/presets', 'DLSS', 'Performance')
 		return
 	end
 
-	if quality == var.dlss.UPERFORMANCE then
+	if quality == Var.dlss.UPERFORMANCE then
 		Cyberpunk.SetOption('/graphics/presets', 'DLSS', 'Ultra Performance')
 		return
 	end
 end
 
-return config
+return Config

@@ -1,6 +1,6 @@
--- helpers/config.lua
+-- helpers/Config.lua
 
-local config = {
+Config = {
 	status = 'Ready.',
 	SetMode = require('helpers/setmode').SetMode,
 	SetQuality = require('helpers/setquality').SetQuality,
@@ -28,4 +28,4 @@ local config = {
 	},
 }
 
-return config
+return Config

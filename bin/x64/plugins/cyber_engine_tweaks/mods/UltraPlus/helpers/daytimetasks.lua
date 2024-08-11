@@ -1,21 +1,22 @@
 -- helpers/daytimetasks.lua
 
-local logger = require('helpers/logger')
-local var = require('helpers/variables')
-local config = {}
+Logger = require('helpers/Logger')
+Var = require('helpers/Variables')
+Config = {}
+Cyberpunk = require('helpers/Cyberpunk')
 
-function config.SetDaytime(hour)
-	if hour ~= config.PreviousHour then
+function Config.SetDaytime(hour)
+	if hour ~= Config.PreviousHour then
 		local timeDescription = (hour == 6) and 'dawn' or (hour == 18) and 'dusk' or (hour == 12) and 'midday' or (hour == 20) and 'night time' or string.format('%02d:00', hour)
-		logger.info(string.format('    (Doing daytime tasks for: %s)', timeDescription))
+		Logger.info(string.format('    (Doing daytime tasks for: %s)', timeDescription))
 
-		local sunAngularSize = var.SunAngularSizes[hour]
+		local sunAngularSize = Var.SunAngularSizes[hour]
 		if sunAngularSize then
 			Cyberpunk.SetOption('RayTracing', 'SunAngularSize', sunAngularSize)
 		end
 	end
 
-	config.PreviousHour = hour
+	Config.PreviousHour = hour
 end
 
-return config
+return Config

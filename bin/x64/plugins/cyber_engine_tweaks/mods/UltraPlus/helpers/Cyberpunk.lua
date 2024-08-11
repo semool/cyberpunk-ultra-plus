@@ -1,8 +1,9 @@
 -- helpers/Cyberpunk.lua
 
-local logger = require('helpers/logger')
-local var = require('helpers/variables')
-local config = require('helpers/config')
+Logger = require('helpers/Logger')
+Var = require('helpers/Variables')
+Config = require('helpers/Config')
+Cyberpunk = {}
 
 local function toboolean(value)
 	if value == 'true' or value == true then
@@ -40,7 +41,7 @@ Cyberpunk = {
 			return tonumber(value)
 		end
 
-		logger.info('ERROR: Error getting value for:', category .. '/' .. item, '=', value)
+		Logger.info('ERROR: Error getting value for:', category .. '/' .. item, '=', value)
 	end,
 
 	GetValue = function(category, item)
@@ -91,7 +92,7 @@ Cyberpunk = {
 	GetOption = function(category, item)
 		-- gets a live game setting, working out which method to use for different settings
 		if category == 'internal' then
-			if var.settings[item] == true then
+			if Var.settings[item] == true then
 				return true
 			end
 
@@ -114,12 +115,12 @@ Cyberpunk = {
 	SetOption = function(category, item, value, valueType)
 		-- sets a live game setting, working out which method to use for different settings
 		if value == nil then
-			logger.info('ERROR: Skipping nil value:', category .. '/' .. item, '=', value)
+			Logger.info('ERROR: Skipping nil value:', category .. '/' .. item, '=', value)
 			return
 		end
 
 		if category == 'internal' then
-			var.settings[item] = value
+			Var.settings[item] = value
 			return
 		end
 
@@ -127,16 +128,16 @@ Cyberpunk = {
 			if tostring(value) == 'true' or tostring(value) == 'false' then
 				if Cyberpunk.GetOption(category, item) ~= value then
 					Cyberpunk.SetValue(category, item, value)
-					if not config.gameSession.isInMenu then
-						var.confirmationRequired = true
+					if not Config.gameSession.isInMenu then
+						Var.confirmationRequired = true
 					end
 				end
 				return
 			elseif tostring(value):match('^%-?%d+$') then -- integer (index) values
 				if Cyberpunk.GetIndex(category, item) ~= tonumber(value) then
 					Cyberpunk.SetIndex(category, item, tonumber(value))
-					if not config.gameSession.isInMenu then
-						var.confirmationRequired = true
+					if not Config.gameSession.isInMenu then
+						Var.confirmationRequired = true
 					end
 				end
 				return
@@ -160,7 +161,7 @@ Cyberpunk = {
 			return
 		end
 
-		logger.info('ERROR: Couldn\'t set value for:', category .. '/' .. item, '=', value)
+		Logger.info('ERROR: Couldn\'t set value for:', category .. '/' .. item, '=', value)
 	end,
 
 	GetPlayer = function()
