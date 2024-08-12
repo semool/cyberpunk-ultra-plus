@@ -526,7 +526,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/SHARC', 'UsePrevFrameBiasAllowance', '0.7')			-- 4.8.0
 		Cyberpunk.SetOption('Editor/SHARC', 'HistoryReset', '4')
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.1')
-		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', false)
+		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', true)
 		SaveSettings()
 		return
 	end

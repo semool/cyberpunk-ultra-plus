@@ -2,8 +2,6 @@
 
 Logger = require('helpers/Logger')
 Var = require('helpers/Variables')
-Config = require('helpers/Config')
-Cyberpunk = {}
 
 local function toboolean(value)
 	if value == 'true' or value == true then
@@ -15,7 +13,7 @@ local function toboolean(value)
 	end
 end
 
-Cyberpunk = {
+local Cyberpunk = {
 	SplitOption = function(string)
 		-- splits an ini/CVar command into its constituents
 		local category, item = string.match(string, '(.-)/([^/]+)$')
@@ -128,17 +126,11 @@ Cyberpunk = {
 			if tostring(value) == 'true' or tostring(value) == 'false' then
 				if Cyberpunk.GetOption(category, item) ~= value then
 					Cyberpunk.SetValue(category, item, value)
-					if not Config.gameSession.isInMenu then
-						Var.confirmationRequired = true
-					end
 				end
 				return
 			elseif tostring(value):match('^%-?%d+$') then -- integer (index) values
 				if Cyberpunk.GetIndex(category, item) ~= tonumber(value) then
 					Cyberpunk.SetIndex(category, item, tonumber(value))
-					if not Config.gameSession.isInMenu then
-						Var.confirmationRequired = true
-					end
 				end
 				return
 			end
