@@ -482,7 +482,7 @@ local function doLazyUpdate()
 
 	-- begin targetFps logic:
 	if not Var.settings.enableTargetFps or Var.settings.mode == Var.mode.RTOnly then
-		Logger.info('Target FPS not enabled')
+		-- Logger.info('Target FPS not enabled')
 		return
 	end
 
