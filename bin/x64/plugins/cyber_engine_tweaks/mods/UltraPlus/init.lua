@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.3.0',
+	__VERSION	 = '5.3.2',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -53,13 +53,16 @@ local function isGameSessionActive()
 	Config.gameSession.photoModeActive = blackboardPM:GetBool(blackboardDefs.PhotoMode.IsActive)
 	Config.gameSession.tutorialActive = Game.GetTimeSystem():IsTimeDilationActive('UI_TutorialPopup')
 
+	if Var.window.cetOpenAtInit then
+		Config.status = "Please reload a save to reactivate Ultra+"
+	end
+
 	if time ~= Config.gameSession.lastTime
 	and Config.gameSession.gameSessionActive
 	and not Config.gameSession.fastTravelActive
 	and not Config.gameSession.gameMenuActive
 	and not Config.gameSession.photoModeActive
 	and not Config.gameSession.tutorialActive
-	and not Config.gameSession.gameMenuActive
 	and not Cyberpunk.IsPreGame() then
 		timer.paused = false
 	else
@@ -478,22 +481,26 @@ local function doLazyUpdate()
 	Config.SetDaytime(Cyberpunk.GetHour())
 
 	-- begin targetFps logic:
-	if not Var.settings.enableTargetFps
-	or Var.settings.mode == Var.mode.RTOnly then
+	if not Var.settings.enableTargetFps or Var.settings.mode == Var.mode.RTOnly then
+		Logger.info('Target FPS not enabled')
 		return
 	end
 
-	if Stats.fps < Var.settings.targetFps then
-		if Var.settings.autoScale > 1 then
-			Var.settings.autoScale = Var.settings.autoScale - 1
-			Config.AutoScale(Var.settings.autoScale)
-		end
-	else
-		if Var.settings.autoScale < 6 then
-			Var.settings.autoScale = Var.settings.autoScale + 1
-			Config.AutoScale(Var.settings.autoScale)
-		end
+	local percentageDifference = (Stats.fps - Var.settings.targetFps) / Var.settings.targetFps * 100
+	local scaleStep = math.floor(percentageDifference / 10)
+
+	Var.settings.lastAutoScale = Var.settings.autoScale
+	Var.settings.autoScale = Var.settings.autoScale + scaleStep
+	if scaleStep == 0 then
+		return
 	end
+
+	if Var.settings.autoScale > 6 then Var.settings.autoScale = 6 end
+	if Var.settings.autoScale < 1 then Var.settings.autoScale = 1 end
+	if Var.settings.autoScale == Var.settings.lastAutoScale then
+		return
+	end
+	Config.AutoScale(Var.settings.autoScale)
 end
 
 local function doWeatherUpdate()
@@ -545,7 +552,7 @@ end)
 
 local function initUltraPlus()
 	Logger.info('Initializing...')
-	Logger.debug('Debug mode active')
+	Logger.debug('Debug mode enabled')
 
 	LoadIni('common')
 	LoadSettings()
@@ -557,18 +564,16 @@ local function initUltraPlus()
 	Config.SetVram(Var.settings.vram)
 	LoadIni('myownsettings')
 
+	timer.fast = 0
+	timer.lazy = 0
+	timer.weather = 0
+
 	-- preparePTNext()
 end
 
-registerForEvent('onTweak', function()
-	-- load as early as possible to prevent crashes
-	LoadIni('common')
-	LoadIni('myownsettings')
-end)
-
 registerForEvent('onInit', function()
 
-	ObserveAfter('QuestTrackerGameController', 'OnInitialize', function()
+	Observe('QuestTrackerGameController', 'OnInitialize', function()
 		Config.gameSession.gameSessionActive = true
 	end)
 
@@ -594,11 +599,19 @@ registerForEvent('onInit', function()
 		Logger.info(string.format('	(Camera control: %s %s)', this, val))
 	end)
 
-	ObserveAfter('CCTVCamera', 'TakeControl', function(this, val)
+	Observe('CCTVCamera', 'TakeControl', function(this, val)
 		Logger.info(string.format('	(Camera control end: %s %s)', this, val))
 	end)
 
 	initUltraPlus()
+end)
+
+registerForEvent('onTweak', function()
+	-- called early but also after 'Reload all mods'
+
+	-- inject common settings during engine init
+	LoadIni('common')
+	LoadIni('myownsettings')
 end)
 
 registerForEvent('onOverlayOpen', function()

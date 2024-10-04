@@ -23,6 +23,7 @@ local Var = {
 		graphics = 'Unknown',
 		sceneScale = 1,
 		autoScale = 3,
+		lastAutoScale = 3,
 		nsgddCompatible = nil,
 		rayReconstruction = nil,
 		indoors = nil,
