@@ -1,7 +1,6 @@
 -- helpers/Variables.lua
 
 local Var = {
-	ultraPlusActive = false,
 	confirmationRequired = false,
 	window = {
 		open = false,

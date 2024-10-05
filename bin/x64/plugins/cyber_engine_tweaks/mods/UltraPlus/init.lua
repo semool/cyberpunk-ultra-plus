@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.3.2',
+	__VERSION	 = '5.3.3',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -29,6 +29,7 @@ Cyberpunk = require('helpers/Cyberpunk')
 Stats = {
 	fps = 0,
 }
+local UltraPlusFlag = "UltraPlus.Initialized"
 local options = require('helpers/options')
 local render = require('render')
 local timer = {
@@ -40,6 +41,18 @@ local timer = {
 	LAZY = 5.0,
 	WEATHER = 910, -- 15:10 hours
 }
+
+local function setUltraPlusInitialized(flag)
+    TweakDB:SetFlat(UltraPlusFlag, flag)
+end
+
+local function isUltraPlusInitialized()
+    local success, flag = pcall(TweakDB.GetFlat, UltraPlusFlag)
+    if not success then
+        return false
+    end
+    return flag
+end
 
 local function isGameSessionActive()
 	-- check if the game is active or not, which turns out to be quite difficult!
@@ -58,7 +71,7 @@ local function isGameSessionActive()
 	end
 
 	if time ~= Config.gameSession.lastTime
-	and Config.gameSession.gameSessionActive
+	and (Config.gameSession.gameSessionActive or isUltraPlusInitialized())
 	and not Config.gameSession.fastTravelActive
 	and not Config.gameSession.gameMenuActive
 	and not Config.gameSession.photoModeActive
@@ -551,7 +564,13 @@ registerForEvent('onUpdate', function(delta)
 end)
 
 local function initUltraPlus()
-	Logger.info('Initializing...')
+	if isUltraPlusInitialized() then
+		Logger.info('    (CET reload detected)')
+		Logger.info('Reinitializing...')
+	else
+		Logger.info('Initializing...')
+	end
+
 	Logger.debug('Debug mode enabled')
 
 	LoadIni('common')
@@ -563,6 +582,10 @@ local function initUltraPlus()
 	Config.SetSceneScale(Var.settings.sceneScale)
 	Config.SetVram(Var.settings.vram)
 	LoadIni('myownsettings')
+
+	timer.fast = 0
+	timer.lazy = 0
+	timer.weather = 0
 
 	timer.fast = 0
 	timer.lazy = 0
@@ -607,16 +630,13 @@ registerForEvent('onInit', function()
 end)
 
 registerForEvent('onTweak', function()
-	-- called early but also after 'Reload all mods'
-
-	-- inject common settings during engine init
+	-- called early during engine init
 	LoadIni('common')
 	LoadIni('myownsettings')
 end)
 
 registerForEvent('onOverlayOpen', function()
 	Var.window.open = true
-	Var.ultraPlusActive = true
 end)
 
 registerForEvent('onOverlayClose', function()

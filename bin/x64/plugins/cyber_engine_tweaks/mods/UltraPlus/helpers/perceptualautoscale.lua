@@ -8,7 +8,7 @@ Cyberpunk = require('helpers/Cyberpunk')
 function Config.AutoScale(quality)
 
 	local percentage = math.floor((quality / 6) * 100)
-	Logger.info('    (Auto-scaling perceptual quality to', percentage..'% to try and hit FPS target)')
+	Logger.info('    (Target FPS: Auto-scaling perceptual quality to', percentage..'%)')
 
 	if quality == 1 then
 		if Var.settings.mode == Var.mode.PT16 then
