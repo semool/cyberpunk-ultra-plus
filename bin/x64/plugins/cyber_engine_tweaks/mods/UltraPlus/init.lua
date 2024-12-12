@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.3.4',
+	__VERSION	 = '5.3.5',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -263,6 +263,8 @@ function SaveSettings()
 	UltraPlus['internal.targetFps'] = Var.settings.targetFps
 	UltraPlus['internal.enableConsole'] = Var.settings.enableConsole
 	UltraPlus['internal.weatherFix'] = Var.settings.weatherFix
+	UltraPlus['internal.enableTraffic'] = Var.settings.enableTraffic
+	UltraPlus['internal.enableCrowds'] = Var.settings.enableCrowds
 
 	local settingsTable = { UltraPlus = UltraPlus }
 
@@ -504,12 +506,12 @@ local function doLazyUpdate()
 
 	-- begin targetFps logic:
 	if not Var.settings.enableTargetFps or Var.settings.mode == Var.mode.RTOnly then
-		-- Logger.info('Target FPS not enabled')
+		Logger.info('Target FPS not enabled')
 		return
 	end
 
 	local percentageDifference = (Stats.fps - Var.settings.targetFps) / Var.settings.targetFps * 100
-	local scaleStep = percentageDifference
+	local scaleStep = math.floor(percentageDifference / 10)
 
 	Var.settings.lastAutoScale = Var.settings.autoScale
 	Var.settings.autoScale = Var.settings.autoScale + scaleStep
@@ -594,11 +596,9 @@ local function initUltraPlus()
 	Config.SetQuality(Var.settings.quality)
 	Config.SetSceneScale(Var.settings.sceneScale)
 	Config.SetVram(Var.settings.vram)
+	Config.SetPop(Var.settings.enableTraffic)
+	Config.SetCars(Var.settings.enableTraffic)
 	LoadIni('myownsettings')
-
-	timer.fast = 0
-	timer.lazy = 0
-	timer.weather = 0
 
 	timer.fast = 0
 	timer.lazy = 0
