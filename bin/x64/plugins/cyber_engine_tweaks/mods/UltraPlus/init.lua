@@ -511,7 +511,7 @@ local function doLazyUpdate()
 	end
 
 	local percentageDifference = (Stats.fps - Var.settings.targetFps) / Var.settings.targetFps * 100
-	local scaleStep = math.floor(percentageDifference / 10)
+	local scaleStep = percentageDifference
 
 	Var.settings.lastAutoScale = Var.settings.autoScale
 	Var.settings.autoScale = Var.settings.autoScale + scaleStep
