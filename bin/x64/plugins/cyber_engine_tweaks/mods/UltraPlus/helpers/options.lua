@@ -3,12 +3,6 @@
 local options = {
 	tweaks = {
 		{
-			item = 'nsgddCompatible',
-			name = 'Enable Not So Good Draw Distance Compatibility',
-			category = 'internal',
-			tooltip = 'Changes VRAM configuration to work correctly with Not So Good Draw Distance\nmod (MaxNodesPerFrame, EditorThrottledMaxNodesPerFrame, streaming and precache)',
-		},
-		{
 			item = 'DLSS_D',
 			name = 'Enable Ray Reconstruction Denoiser',
 			category = '/graphics/presets',
@@ -1702,7 +1696,7 @@ local options = {
 			item = 'SpatialSamplingRadius',
 			name = 'ReSTIR GI Spatial Sampling Radius',
 			category = 'Editor/ReSTIRGI',
-			tooltip = '',
+			tooltip = 'offset for "boiling" type noise (large spots)',
 		},
 		{
 			item = 'BoilingFilterStrength',
@@ -1714,13 +1708,13 @@ local options = {
 			item = 'TracingRadius',
 			name = 'Ray Tracing Radius',
 			category = 'RayTracing',
-			tooltip = '',
+			tooltip = 'in meters?',
 		},
 		{
 			item = 'TracingRadiusReflections',
 			name = 'Ray Tracing Radius for Reflections',
 			category = 'RayTracing',
-			tooltip = '',
+			tooltip = '2km because tall buildings and lakes. increase in Insane for lakes',
 		},
 		{
 			item = 'RayNormalOffset',
@@ -1780,19 +1774,19 @@ local options = {
 			item = 'VisibilityFrustumOffset',
 			name = 'Visibility Frustum Offset',
 			category = 'RayTracing/Collector',
-			tooltip = '',
+			tooltip = 'significantly reduce 2.0 PT ghosting with minimal visual difference',
 		},
 		{
 			item = 'VisibilityCullingRadius',
 			name = 'Visibility Culling Radius',
 			category = 'RayTracing/Collector',
-			tooltip = '',
+			tooltip = 'VisibilityCullingRadius',
 		},
 		{
 			item = 'LocalShadowCullingRadius',
 			name = 'Local Shadow Culling Radius',
 			category = 'RayTracing/Collector',
-			tooltip = '',
+			tooltip = 'appears to be ignored in PT',
 		},
 	},
 }

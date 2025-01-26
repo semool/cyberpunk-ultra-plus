@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.3.6',
+	__VERSION	 = '5.3.7',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -262,7 +262,6 @@ function SaveSettings()
 	UltraPlus['internal.enableTargetFps'] = Var.settings.enableTargetFps
 	UltraPlus['internal.targetFps'] = Var.settings.targetFps
 	UltraPlus['internal.enableConsole'] = Var.settings.enableConsole
-	UltraPlus['internal.weatherFix'] = Var.settings.weatherFix
 	UltraPlus['internal.enableTraffic'] = Var.settings.enableTraffic
 	UltraPlus['internal.enableCrowds'] = Var.settings.enableCrowds
 
@@ -544,6 +543,7 @@ registerForEvent('onUpdate', function(delta)
 	-- handle non-blocking background tasks
 	timer.fast = timer.fast + delta
 	timer.lazy = timer.lazy + delta
+	timer.weather = timer.weather + delta
 
 	Stats.fps = (Stats.fps * 9 + (1 / delta)) / 10
 
@@ -556,13 +556,10 @@ registerForEvent('onUpdate', function(delta)
 		doLazyUpdate()
 		timer.lazy = 0
 	end
-	
-	if Var.weatherFix then
-	timer.weather = timer.weather + delta
-		if timer.weather > timer.WEATHER then
-			doWeatherUpdate()
-			timer.weather = 0
-		end
+
+	if timer.weather > timer.WEATHER then
+		doWeatherUpdate()
+		timer.weather = 0
 	end
 
 	for i = #activeTimers, 1, -1 do
@@ -582,7 +579,6 @@ local function initUltraPlus()
 		Logger.info('Reinitializing...')
 	else
 		Logger.info('Initializing...')
-		setUltraPlusInitialized(true)
 	end
 
 	Logger.debug('Debug mode enabled')

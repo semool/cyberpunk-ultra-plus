@@ -31,7 +31,6 @@ local Var = {
 		enableTargetFps = false,
 		targetFps = 30,
 		enableConsole = false,
-		weatherFix = false,
 		enableTraffic = nil,
 		enableCrowds = nil,
 	},

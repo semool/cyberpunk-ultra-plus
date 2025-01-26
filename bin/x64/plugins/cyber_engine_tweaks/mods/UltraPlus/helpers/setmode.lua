@@ -101,7 +101,7 @@ function Config.SetMode(mode)
 	if mode == Var.mode.RT_PT then
 		LoadIni('rtpt')
 
-		Var.settings.sceneScale = Var.sceneScale.MEDIUM										-- 5.3.4 medium looks much better and performance impact is minimal
+		Var.settings.sceneScale = Var.sceneScale.MEDIUM										
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', false)
@@ -323,6 +323,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', true)
+
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)

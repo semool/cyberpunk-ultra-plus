@@ -321,6 +321,7 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '2')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '16')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', true)
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '5')				--was 7 5.3.4
 			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
@@ -386,7 +387,7 @@ function Config.SetQuality(quality)
 		Cyberpunk.SetOption('Editor/ReGIR', 'ShadingCandidatesCount', '24')
 		Cyberpunk.SetOption('Editor/ReGIR', 'BuildCandidatesCount', '8')		-- above 8 causes flickering lights after menus
 		Cyberpunk.SetOption('Rendering/Shadows', 'DistantShadowsForceFoliageGeometry', false)
-		Cyberpunk.SetOption('RayTracing', 'TracingRadiusReflections', '8000.0')
+		Cyberpunk.SetOption('RayTracing', 'TracingRadiusReflections', '2000.0')
 		Cyberpunk.SetOption('RayTracing', 'CullingDistanceCharacter', '25.0')					-- WAS 20.0
 		Cyberpunk.SetOption('RayTracing', 'CullingDistanceVehicle', '70.0')						-- WAS 60.0
 		Cyberpunk.SetOption('RayTracing/ReferenceScreenshot', 'SampleNumber', '24')
@@ -431,6 +432,9 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
+			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/AmbientOcclusion', 'AntiFirefly', true)
+			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Direct', 'AntiFirefly', true)
+			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Indirect', 'AntiFirefly', true)
 			return
 		end
 

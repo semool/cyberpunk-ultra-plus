@@ -145,13 +145,6 @@ local function renderMainTab()
 	end
 
 	ui.space()
-	Var.settings.weatherFix, toggled = ui.checkbox('Enable Weather Stuck Fix', Var.settings.weatherFix)
-	ui.tooltip('Enable a timer that changes the weather if it was stuck for too long')
-	if toggled then
-		SaveSettings()
-	end
-
-	ui.space()
 	Var.settings.enableConsole, toggled = ui.checkbox('Console', Var.settings.enableConsole)
 	ui.tooltip('Ultra+ will log what it\'s doing to the CET console')
 	if toggled then
