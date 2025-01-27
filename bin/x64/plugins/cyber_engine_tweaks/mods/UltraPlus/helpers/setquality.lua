@@ -77,8 +77,8 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '1')
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '8')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '5')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '16')
 			return
 		end
 
@@ -191,8 +191,8 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '2')
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '8')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '5')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '16')
 			return
 		end
 
@@ -309,8 +309,8 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '3')
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '12')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '5')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '16')
 			return
 		end
 
@@ -415,7 +415,7 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '3')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '5')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '16')
 			return
 		end

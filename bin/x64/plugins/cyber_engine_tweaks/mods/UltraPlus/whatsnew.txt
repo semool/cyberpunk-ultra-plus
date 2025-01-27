@@ -1,3 +1,8 @@
+5.4.5
+---------------------
+Improve scene detail and reduce boiling noise for all PT modes from FireKahuna (thank you)
+Fix an issue where PTNext might not enable correctly
+
 5.4.4
 ---------------------
 Pull forward fix for stuck weather due to typo from mick-lue (thank you)

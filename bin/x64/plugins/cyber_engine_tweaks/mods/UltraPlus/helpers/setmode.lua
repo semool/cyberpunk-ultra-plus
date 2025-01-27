@@ -164,7 +164,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'MaxHistoryLength', '0')
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'TargetHistoryLength', '0')
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'BiasCorrectionMode', '3')
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '48.0')			-- WAS 64.0
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '32.0')			-- WAS 48.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'UseCustomDenoiser', false)
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableRTXDIDenoising', true)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')			-- WAS 64.0
@@ -308,7 +308,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseTemporalRGS', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'MaxHistoryLength', '0')
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'TargetHistoryLength', '0')
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '48.0')				-- WAS 64.0
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '32.0')				-- WAS 48.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'UseCustomDenoiser', true)
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableRTXDIDenoising', true)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')				-- WAS 64.0
@@ -380,7 +380,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseTemporalRGS', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'MaxHistoryLength', '0')
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'TargetHistoryLength', '0')
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '48.0')				-- WAS 64.0
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '32.0')				-- WAS 48.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'UseCustomDenoiser', false)
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableRTXDIDenoising', true)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')				-- WAS 64.0
@@ -450,10 +450,10 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'BoilingFilterStrength', '0.4')
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseSpatialRGS', true)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseTemporalRGS', true)
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'MaxHistoryLength', '6')
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'TargetHistoryLength', '4')
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'MaxHistoryLength', '16')
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'TargetHistoryLength', '8')
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'BiasCorrectionMode', '3')
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '48.0')			-- WAS 64.0
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '32.0')			-- WAS 48.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'UseCustomDenoiser', false)
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableRTXDIDenoising', true)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')			-- WAS 64.0
@@ -520,13 +520,13 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableFused', true)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableFallbackSampling', true)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableBoilingFilter', true)	   			-- WAS false
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'BoilingFilterStrength', '0.0')
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'BoilingFilterStrength', '0.4')
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseSpatialRGS', true)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseTemporalRGS', true)
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'MaxHistoryLength', '8')
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'TargetHistoryLength', '4')
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'MaxHistoryLength', '16')
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'TargetHistoryLength', '8')
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'BiasCorrectionMode', '3')
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '48.0')			-- WAS 64.0
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '32.0')			-- WAS 48.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'UseCustomDenoiser', false)
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableRTXDIDenoising', false)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '0.0')				-- WAS 64.0

@@ -1696,7 +1696,7 @@ local options = {
 			item = 'SpatialSamplingRadius',
 			name = 'ReSTIR GI Spatial Sampling Radius',
 			category = 'Editor/ReSTIRGI',
-			tooltip = 'offset for "boiling" type noise (large spots)',
+			tooltip = '',
 		},
 		{
 			item = 'BoilingFilterStrength',
@@ -1708,13 +1708,13 @@ local options = {
 			item = 'TracingRadius',
 			name = 'Ray Tracing Radius',
 			category = 'RayTracing',
-			tooltip = 'in meters?',
+			tooltip = '',
 		},
 		{
 			item = 'TracingRadiusReflections',
 			name = 'Ray Tracing Radius for Reflections',
 			category = 'RayTracing',
-			tooltip = '2km because tall buildings and lakes. increase in Insane for lakes',
+			tooltip = '',
 		},
 		{
 			item = 'RayNormalOffset',
@@ -1774,19 +1774,19 @@ local options = {
 			item = 'VisibilityFrustumOffset',
 			name = 'Visibility Frustum Offset',
 			category = 'RayTracing/Collector',
-			tooltip = 'significantly reduce 2.0 PT ghosting with minimal visual difference',
+			tooltip = '',
 		},
 		{
 			item = 'VisibilityCullingRadius',
 			name = 'Visibility Culling Radius',
 			category = 'RayTracing/Collector',
-			tooltip = 'VisibilityCullingRadius',
+			tooltip = '',
 		},
 		{
 			item = 'LocalShadowCullingRadius',
 			name = 'Local Shadow Culling Radius',
 			category = 'RayTracing/Collector',
-			tooltip = 'appears to be ignored in PT',
+			tooltip = '',
 		},
 	},
 }

@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.4.4',
+	__VERSION	 = '5.4.5',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -262,7 +262,7 @@ local function enablePTNext()
 
 	Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
 
-	Wait(0.8, function()
+	Wait(1.5, function()
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableSeparateDenoising', true)
 	end)
 
@@ -475,7 +475,7 @@ local function initUltraPlus()
 	Config.SetVram(Var.settings.vram)
 	Config.SetPop(Var.settings.enableTraffic)
 	Config.SetCars(Var.settings.enableTraffic)
-	LoadIni('myownsettings')
+	LoadIni('config/myownsettings.ini', true)
 
 	timer.fast = 0
 	timer.lazy = 0
