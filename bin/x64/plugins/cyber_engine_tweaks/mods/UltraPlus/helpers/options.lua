@@ -709,6 +709,12 @@ local options = {
 			tooltip = '',
 		},
 		{
+			item = 'DLSSDSeparateParticleColor',
+			name = 'Enable DLSSD Separate Particle Color',
+			category = 'Rendering',
+			tooltip = '',
+		},
+		{
 			item = 'Enabled',
 			name = 'PT Interop Cache',
 			category = 'Interop/Cache',
@@ -725,12 +731,6 @@ local options = {
 			name = 'UseSkinningLOD',
 			category = 'Rendering',
 			tooltip = 'This may mean - Use LODs specified in the materials',
-		},
-		{
-			item = 'CharacterSubsurfaceStochastic',
-			name = 'Character Subsurface Stochastic',
-			category = 'Developer/FeatureToggles',
-			tooltip = '',
 		},
 		{
 			item = 'CharacterSubsurfaceScattering',

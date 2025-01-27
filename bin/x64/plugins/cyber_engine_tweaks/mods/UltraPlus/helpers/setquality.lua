@@ -95,7 +95,8 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '1')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '8')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
-			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '10')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0') -- performance hack, leave cache enabled with no bounces
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
@@ -208,7 +209,8 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '1')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '8')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
-			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '10')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0') -- performance hack, leave cache enabled with no bounces
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
@@ -288,7 +290,7 @@ function Config.SetQuality(quality)
 		Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 		Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '2')
 		Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '2')
-		Cyberpunk.SetOption('RayTracing/Reference', 'RayNumberScreenshot', '2')
+		Cyberpunk.SetOption('RayTracing/Reference', 'RayNumberScreenshot', '3')
 		Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumberScreenshot', '2')
 
 		Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '5')
@@ -321,8 +323,8 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '2')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '16')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', true)
-			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '5')				--was 7 5.3.4
-			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '10')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0') -- performance hack, leave cache enabled with no bounces
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
@@ -387,7 +389,7 @@ function Config.SetQuality(quality)
 		Cyberpunk.SetOption('Editor/ReGIR', 'ShadingCandidatesCount', '24')
 		Cyberpunk.SetOption('Editor/ReGIR', 'BuildCandidatesCount', '8')		-- above 8 causes flickering lights after menus
 		Cyberpunk.SetOption('Rendering/Shadows', 'DistantShadowsForceFoliageGeometry', false)
-		Cyberpunk.SetOption('RayTracing', 'TracingRadiusReflections', '2000.0')
+		Cyberpunk.SetOption('RayTracing', 'TracingRadiusReflections', '8000.0')
 		Cyberpunk.SetOption('RayTracing', 'CullingDistanceCharacter', '25.0')					-- WAS 20.0
 		Cyberpunk.SetOption('RayTracing', 'CullingDistanceVehicle', '70.0')						-- WAS 60.0
 		Cyberpunk.SetOption('RayTracing/ReferenceScreenshot', 'SampleNumber', '24')
@@ -428,8 +430,8 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '3')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '12')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', true)
-			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
-			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '10')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0') -- performance hack, leave cache enabled with no bounces
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/AmbientOcclusion', 'AntiFirefly', true)

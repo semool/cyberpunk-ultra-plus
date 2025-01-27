@@ -14,26 +14,26 @@ function Config.SetGraphics(graphics)
 	Logger.info('Setting game graphics for', graphics)
 
 	if graphics == Var.graphics.HIGH then
-		LoadIni('graphics_high')
-		LoadIni('myownsettings')
+		LoadIni('config/graphics_high.ini', true)
+		LoadIni('config/myownsettings.ini', true)
 		return
 	end
 
 	if graphics == Var.graphics.MEDIUM then
-		LoadIni('graphics_medium')
-		LoadIni('myownsettings')
+		LoadIni('config/graphics_medium.ini', true)
+		LoadIni('config/myownsettings.ini', true)
 		return
 	end
 
 	if graphics == Var.graphics.FAST then
-		LoadIni('graphics_fast')
-		LoadIni('myownsettings')
+		LoadIni('config/graphics_fast.ini', true)
+		LoadIni('config/myownsettings.ini', true)
 		return
 	end
 
 	if graphics == Var.graphics.POTATO then
-		LoadIni('graphics_potato')
-		LoadIni('myownsettings')
+		LoadIni('config/graphics_potato.ini', true)
+		LoadIni('config/myownsettings.ini', true)
 		return
 	end
 end

@@ -8,21 +8,35 @@ Cyberpunk = require('helpers/Cyberpunk')
 function Config.SetMode(mode)
 	Logger.info('Configuring mode for', mode)
 
+	if mode == 'Unknown' then
+		if not Cyberpunk.GetOption('/graphics/raytracing', 'RayTracing') then
+			Var.settings.mode = Var.mode.RASTER
+			return
+		end
+
+		if not Cyberpunk.GetOption('/graphics/raytracing', 'RayTracedPathTracing') then
+			Var.settings.mode = Var.mode.RT
+			return
+		end
+
+		Var.settings.mode = Var.mode.PT21
+	end
+
 	if mode == Var.mode.RASTER then
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', false)
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.15')
 		Cyberpunk.SetOption('Editor/SHARC', 'Enable', false)
-		SaveSettings()
 		return
 	end
 
 	if mode == Var.mode.RASTER then
-		LoadIni('rt')
+		LoadIni('config/rt.ini', true)
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', false)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', false)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
+		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
 
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', false)
 		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false)
@@ -53,16 +67,16 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.35')
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableRTXDIDenoising', false)
 		Cyberpunk.SetOption('Editor/SHARC', 'Enable', false)
-		SaveSettings()
 		return
 	end
 
 	if mode == Var.mode.RT then
-		LoadIni('rt')
+		LoadIni('config/rt.ini', true)
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', false)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
+		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
 
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', false)
@@ -94,18 +108,18 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.35')
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableRTXDIDenoising', false)
 		Cyberpunk.SetOption('Editor/SHARC', 'Enable', false)
-		SaveSettings()
 		return
 	end
 
 	if mode == Var.mode.RT_PT then
-		LoadIni('rtpt')
+		LoadIni('config/rtpt.ini', true)
 
-		Var.settings.sceneScale = Var.sceneScale.MEDIUM										
+		Var.settings.sceneScale = Var.sceneScale.OFF
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', false)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
+		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
 
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
@@ -167,16 +181,16 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/SHARC', 'HistoryReset', '4')
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.15')
 		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', true)
-		SaveSettings()
 		return
 	end
 
 	if mode == Var.mode.VANILLA then
-		LoadIni('vanilla')
+		LoadIni('config/vanilla.ini', true)
 
 		-- Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		-- Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
+		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
 
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
@@ -236,19 +250,19 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/SHARC', 'UsePrevFrameBiasAllowance', '0.25')
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.1')
 		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', false)
-		SaveSettings()
 		return
 	end
 
 	if mode == Var.mode.PT16 then
-		LoadIni('pt')
+		LoadIni('config/pt.ini', true)
 
 		-- leave SHaRC enabled but set to fastest; performance hack
-		Var.settings.sceneScale = Var.sceneScale.FAST
+		Var.settings.sceneScale = Var.sceneScale.OFF
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
+		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
 
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
@@ -312,18 +326,16 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/SHARC', 'HistoryReset', '0')
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.4')
 		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', true)
-		SaveSettings()
 		return
 	end
 
 	if mode == Var.mode.PT20 then
-		LoadIni('pt')
+		LoadIni('config/pt.ini', true)
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', true)
-
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)
@@ -359,6 +371,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('RayTracing/NRD', 'UseReblurForIndirectRadiance', false)
 		Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Direct', 'ReferenceAccumulation', false)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
+		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'Enable', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableFused', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableFallbackSampling', true)
@@ -385,16 +398,16 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/SHARC', 'HistoryReset', '4')
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.4')
 		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', true)
-		SaveSettings()
 		return
 	end
 
 	if mode == Var.mode.PT21 then
-		LoadIni('pt')
+		LoadIni('config/pt.ini', true)
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
+		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
 
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
@@ -458,16 +471,16 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/SHARC', 'HistoryReset', '4')
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.4')
 		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', true)
-		SaveSettings()
 		return
 	end
 
 	if mode == Var.mode.PTNEXT then
-		LoadIni('pt')
+		LoadIni('config/pt.ini', true)
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', true)
+		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', true)
 
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
@@ -531,7 +544,6 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/SHARC', 'HistoryReset', '4')
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.1')
 		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', true)
-		SaveSettings()
 		return
 	end
 end
