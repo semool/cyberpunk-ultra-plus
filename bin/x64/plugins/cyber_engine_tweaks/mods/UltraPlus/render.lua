@@ -153,7 +153,7 @@ local function renderMainTab()
 		SaveConfig()
 	end
 
-	ui.sameLine(90)
+	ui.sameLine(110)
 	Var.settings.enableTargetFps, toggled = ui.checkbox('Enable Target FPS', toboolean(Var.settings.enableTargetFps))
 	ui.tooltip('Ultra+ will use basic perceptual auto-scaling of ray/path\tracing quality to target consistent FPS')
 	if toggled then
