@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.4.5',
+	__VERSION	 = '5.5.0-experimental',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -294,13 +294,13 @@ local function doRayReconstructionFix()
 	end
 
 	if not Cyberpunk.GetOption('/graphics/presets', 'DLSS_D') then
-		Cyberpunk.SetOption('Editor/RTXDI', 'EnableGradients', false) -- needs testing with NRD again
+		-- Cyberpunk.SetOption('Editor/RTXDI', 'EnableGradients', false) -- needs testing with NRD again
 		Cyberpunk.SetOption('Editor/Denoising/ReLAX/Indirect/Common', 'AntiFirefly', true)
 		return
 	end
 
 	Cyberpunk.SetOption('RayTracing', 'EnableNRD', false)
-	Cyberpunk.SetOption('Editor/RTXDI', 'EnableGradients', true) -- needs testing with NRD again
+	-- Cyberpunk.SetOption('Editor/RTXDI', 'EnableGradients', true) -- needs testing with NRD again
 	Cyberpunk.SetOption('Editor/Denoising/ReLAX/Indirect/Common', 'AntiFirefly', false)
 end
 
